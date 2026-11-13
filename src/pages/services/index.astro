@@ -1,0 +1,174 @@
+---
+import { getEmDashCollection } from "emdash";
+import Base from "../../layouts/Base.astro";
+import PageBanner from "../../components/PageBanner.astro";
+import ServiceCard from "../../components/ServiceCard.astro";
+
+const { entries: services, cacheHint } = await getEmDashCollection("services", {
+	limit: 20,
+});
+if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+
+const workflow = [
+	{
+		step: "01",
+		title: "Site Feasibility & 5D Takeoff",
+		desc: "Geotechnical review, municipal zoning audit, and CSI MasterFormat quantity takeoff within 5 business days.",
+	},
+	{
+		step: "02",
+		title: "BIM Clash Detection & GMP Lock",
+		desc: "Full architectural, structural, and MEP 3D coordination paired with an open-book Guaranteed Maximum Price.",
+	},
+	{
+		step: "03",
+		title: "Self-Performed Field Execution",
+		desc: "Daily Primavera P6 milestone tracking, OSHA Gold safety briefings, and certified concrete & steel QA/QC.",
+	},
+	{
+		step: "04",
+		title: "Commissioning & 10-Year Warranty",
+		desc: "MEP system balancing, digital twin as-built handover, and responsive structural warranty protection.",
+	},
+];
+---
+
+<Base
+	title="Our Construction Services"
+	description="Turnkey Design & Build, Building Renovation, Project Management, Engineering Consulting, Architecture, and Structural Concrete services."
+>
+	<PageBanner
+		highlight="Our"
+		title="Services"
+		subtitle="Integrated pre-construction, engineering, general contracting, and structural capabilities under one accountable roof."
+		backgroundImage="/images/structure/banner-services.jpg"
+		breadcrumbs={[{ label: "Our Services" }]}
+	/>
+
+	<section class="band section">
+		<div class="frame">
+			<div class="st-section-header">
+				<div>
+					<p class="st-kicker">Core Capabilities</p>
+					<h2 class="st-heading">What Structure Delivers</h2>
+				</div>
+				<a href="/cost-calculator" class="st-btn st-btn--sm">
+					Estimate Your Project
+				</a>
+			</div>
+
+			<div class="st-services-grid">
+				{
+					services.map((service) => (
+						<ServiceCard service={service} headingLevel={2} />
+					))
+				}
+			</div>
+		</div>
+	</section>
+
+	<section class="band section st-workflow" aria-labelledby="workflow-heading">
+		<div class="frame">
+			<div class="st-section-header st-section-header--center">
+				<p class="st-kicker st-kicker--on-dark">How We Work</p>
+				<h2 id="workflow-heading" class="st-heading st-heading--on-dark">
+					4-Stage Delivery Governance
+				</h2>
+			</div>
+
+			<div class="st-workflow__grid">
+				{
+					workflow.map((item) => (
+						<div class="st-workflow__card">
+							<span class="st-workflow__step">{item.step}</span>
+							<h3>{item.title}</h3>
+							<p>{item.desc}</p>
+						</div>
+					))
+				}
+			</div>
+		</div>
+	</section>
+
+	<section class="st-quote-ribbon">
+		<div class="frame st-quote-ribbon__inner">
+			<div>
+				<h2 class="st-quote-ribbon__title">
+					Need a custom contracting package or value-engineering audit?
+				</h2>
+				<p class="st-quote-ribbon__sub">
+					Send your drawings or site coordinates for a complimentary technical
+					consultation.
+				</p>
+			</div>
+			<div class="st-quote-ribbon__actions">
+				<a href="/contact#quote-form" class="st-btn st-btn--navy">
+					Speak With an Engineer
+				</a>
+				<a href="/pages/pricing" class="st-btn st-btn--ghost">
+					View Indicative Rates
+				</a>
+			</div>
+		</div>
+	</section>
+</Base>
+
+<style>
+	.st-services-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+		gap: var(--spacing-6);
+	}
+
+	.st-workflow {
+		background: var(--st-navy);
+		color: #ffffff;
+	}
+
+	.st-workflow__grid {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: var(--spacing-6);
+	}
+
+	.st-workflow__card {
+		padding: 1.75rem 1.5rem;
+		background: var(--st-navy-surface);
+		border-block-start: 4px solid var(--st-yellow);
+		border-radius: var(--radius);
+	}
+
+	.st-workflow__step {
+		display: inline-block;
+		margin-block-end: 0.75rem;
+		font-family: var(--font-heading);
+		font-size: 1.75rem;
+		font-weight: 800;
+		color: var(--st-yellow);
+	}
+
+	.st-workflow__card h3 {
+		font-size: 1rem;
+		text-transform: uppercase;
+		color: #ffffff;
+		margin-block-end: 0.55rem;
+	}
+
+	.st-workflow__card p {
+		font-size: 0.875rem;
+		line-height: 1.6;
+		color: var(--st-navy-muted);
+	}
+
+	@media (max-width: 960px) {
+		.st-workflow__grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 580px) {
+		.st-workflow__grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+</style>

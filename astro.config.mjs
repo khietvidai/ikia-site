@@ -5,11 +5,25 @@ import { defineConfig, fontProviders } from "astro/config";
 import emdash from "emdash/astro";
 
 export default defineConfig({
+	site: "https://ikia-site.khietvidai.workers.dev",
 	output: "server",
 	adapter: cloudflare(),
+	build: {
+		inlineStylesheets: "always",
+	},
 	image: {
-		layout: "constrained",
-		responsiveStyles: true,
+		remotePatterns: [
+			{
+				protocol: "https",
+				hostname: "**.workers.dev",
+				pathname: "/_emdash/api/media/file/**",
+			},
+			{
+				protocol: "http",
+				hostname: "localhost",
+				pathname: "/_emdash/api/media/file/**",
+			},
+		],
 	},
 	integrations: [
 		react(),
@@ -21,17 +35,21 @@ export default defineConfig({
 	fonts: [
 		{
 			provider: fontProviders.google(),
-			name: "Inter",
-			cssVariable: "--font-body",
-			weights: [400, 500, 600, 700],
+			name: "Montserrat",
+			cssVariable: "--font-heading",
+			weights: [700, 800],
+			styles: ["normal"],
+			subsets: ["latin", "vietnamese"],
 			fallbacks: ["sans-serif"],
 		},
 		{
 			provider: fontProviders.google(),
-			name: "JetBrains Mono",
-			cssVariable: "--font-mono",
-			weights: [400, 500],
-			fallbacks: ["monospace"],
+			name: "Lato",
+			cssVariable: "--font-body",
+			weights: [400, 700],
+			styles: ["normal"],
+			subsets: ["latin"],
+			fallbacks: ["sans-serif"],
 		},
 	],
 	devToolbar: { enabled: false },

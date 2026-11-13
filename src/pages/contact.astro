@@ -1,0 +1,645 @@
+---
+import Base from "../layouts/Base.astro";
+import PageBanner from "../components/PageBanner.astro";
+import { STRUCTURE_CONTACT } from "../utils/site-identity";
+
+const prefilledEstimate = Astro.url.searchParams.get("estimate")?.trim() || "";
+---
+
+<Base
+	title="Contact & Request a Quote"
+	description="Contact Structure Construction for commercial contracting, building renovation, and turnkey Design-Build estimates."
+>
+	<PageBanner
+		highlight="Contact"
+		title="Us"
+		subtitle="Speak directly with our pre-construction engineers or submit your project parameters for a 5-day GMP estimate."
+		backgroundImage="/images/structure/banner-services.jpg"
+		breadcrumbs={[{ label: "Contact" }]}
+	/>
+
+	<section class="band section">
+		<div class="frame st-contact-layout">
+			<!-- Office Information & Engineering Desk -->
+			<aside class="st-contact-info" aria-label="Headquarters contact details">
+				<p class="st-kicker">Headquarters & Estimating Desk</p>
+				<h2 class="st-heading">Get In Touch</h2>
+				<p class="st-contact-info__lead">
+					Whether you have permit-ready drawings or an early-stage land parcel,
+					our estimating engineers respond within one business day.
+				</p>
+
+				<ul class="st-contact-cards">
+					<li>
+						<span class="st-contact-cards__icon" aria-hidden="true">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+								<circle cx="12" cy="10" r="3"></circle>
+							</svg>
+						</span>
+						<div>
+							<h3>Structure Office</h3>
+							<p>{STRUCTURE_CONTACT.address}</p>
+						</div>
+					</li>
+					<li>
+						<span class="st-contact-cards__icon" aria-hidden="true">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path>
+							</svg>
+						</span>
+						<div>
+							<h3>Direct Engineering Line</h3>
+							<p>
+								<a href={STRUCTURE_CONTACT.phoneHref}>{STRUCTURE_CONTACT.phone}</a>
+								{" · "}
+								<span>{STRUCTURE_CONTACT.secondaryPhone}</span>
+							</p>
+						</div>
+					</li>
+					<li>
+						<span class="st-contact-cards__icon" aria-hidden="true">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<rect width="20" height="16" x="2" y="4" rx="2"></rect>
+								<path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+							</svg>
+						</span>
+						<div>
+							<h3>Bid & Tender Submissions</h3>
+							<p>
+								<a href={STRUCTURE_CONTACT.emailHref}>{STRUCTURE_CONTACT.email}</a>
+							</p>
+						</div>
+					</li>
+					<li>
+						<span class="st-contact-cards__icon" aria-hidden="true">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<circle cx="12" cy="12" r="10"></circle>
+								<polyline points="12 6 12 12 16 14"></polyline>
+							</svg>
+						</span>
+						<div>
+							<h3>Operating Hours</h3>
+							<p>{STRUCTURE_CONTACT.hours}</p>
+						</div>
+					</li>
+				</ul>
+			</aside>
+
+			<!-- Request a Quote Form (modern-web-guidance `validate-input-after-interaction`) -->
+			<div class="st-quote-panel" id="quote-form">
+				<p class="st-kicker">Free 5-Day Takeoff</p>
+				<h2 class="st-heading">Request a Construction Quote</h2>
+
+				<div class="st-quote-success" id="quote-success" hidden role="status">
+					<h3>Thank you — Inquiry Received!</h3>
+					<p>
+						Your project brief has been routed to our Pre-Construction
+						Estimating Desk. A senior project engineer will contact you within
+						1 business day.
+					</p>
+				</div>
+
+				<form class="st-form" id="structure-quote-form" novalidate={false}>
+					<div class="st-form__row">
+						<div class="field">
+							<label for="full-name">Full Name *</label>
+							<span id="name-hint" class="hint">
+								Your full name or primary project contact
+							</span>
+							<input
+								type="text"
+								id="full-name"
+								name="name"
+								required
+								minlength="2"
+								autocomplete="name"
+								aria-describedby="name-hint"
+								data-error="name-error"
+							/>
+							<div id="name-error" class="error-msg">
+								<span role="img" aria-label="Error">❌</span> Enter your full
+								name (at least 2 characters).
+							</div>
+						</div>
+
+						<div class="field">
+							<label for="work-email">Email Address *</label>
+							<span id="email-hint" class="hint">
+								Format: name@company.com
+							</span>
+							<input
+								type="email"
+								id="work-email"
+								name="email"
+								required
+								autocomplete="email"
+								aria-describedby="email-hint"
+								data-error="email-error"
+							/>
+							<div id="email-error" class="error-msg">
+								<span role="img" aria-label="Error">❌</span> Enter an email
+								address in the format name@company.com.
+							</div>
+						</div>
+					</div>
+
+					<div class="st-form__row">
+						<div class="field">
+							<label for="phone-number">Phone Number *</label>
+							<span id="phone-hint" class="hint">
+								Include area or country code (e.g. +1 555 234 5678)
+							</span>
+							<input
+								type="tel"
+								id="phone-number"
+								name="phone"
+								required
+								pattern="[\d\s()+-]{7,22}"
+								autocomplete="tel"
+								aria-describedby="phone-hint"
+								data-error="phone-error"
+							/>
+							<div id="phone-error" class="error-msg">
+								<span role="img" aria-label="Error">❌</span> Enter a valid
+								phone number (7–22 digits, spaces, or +).
+							</div>
+						</div>
+
+						<div class="field">
+							<label for="service-scope">Primary Scope *</label>
+							<span id="scope-hint" class="hint">
+								Choose the contracting package that best fits
+							</span>
+							<select
+								id="service-scope"
+								name="scope"
+								required
+								aria-describedby="scope-hint"
+								data-error="scope-error"
+							>
+								<option value="">Select a service package...</option>
+								<option value="design-build" selected={Boolean(prefilledEstimate)}>
+									Turnkey Design & Build Package
+								</option>
+								<option value="renovation">Building Renovation & Retrofit</option>
+								<option value="management">Construction Project Management</option>
+								<option value="consulting">Pre-Construction / Value Engineering</option>
+								<option value="concrete">Concrete & Structural Works</option>
+							</select>
+							<div id="scope-error" class="error-msg">
+								<span role="img" aria-label="Error">❌</span> Select a primary
+								construction scope from the list.
+							</div>
+						</div>
+					</div>
+
+					<div class="field">
+						<label for="project-details">Project Brief & Target Timeline *</label>
+						<span id="details-hint" class="hint">
+							Share site location, approximate m², and target mobilization date
+						</span>
+						<textarea
+							id="project-details"
+							name="details"
+							rows="4"
+							required
+							minlength="15"
+							aria-describedby="details-hint"
+							data-error="details-error"
+						>{prefilledEstimate ? `Calculator Benchmark: ${prefilledEstimate}\nSite Location & Notes: ` : ""}</textarea>
+						<div id="details-error" class="error-msg">
+							<span role="img" aria-label="Error">❌</span> Provide at least 15
+							characters describing your site, size, or timeline.
+						</div>
+					</div>
+
+					<div class="st-form__actions">
+						<button type="submit" class="st-btn">
+							Submit Quote Request
+						</button>
+						<button type="reset" class="st-btn st-btn--ghost">
+							Reset Form
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</section>
+</Base>
+
+<script>
+	const form = document.getElementById("structure-quote-form") as HTMLFormElement | null;
+	const successBanner = document.getElementById("quote-success");
+
+	type FormField = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+
+	const isFormField = (node: unknown): node is FormField =>
+		node instanceof HTMLInputElement ||
+		node instanceof HTMLSelectElement ||
+		node instanceof HTMLTextAreaElement;
+
+	if (form) {
+		const linkError = (el: FormField, shown: boolean) => {
+			const errorId = el.dataset.error;
+			if (!errorId) return;
+			const ids = (el.getAttribute("aria-describedby") || "")
+				.split(/\s+/)
+				.filter((id) => id && id !== errorId);
+			if (shown) ids.push(errorId);
+			if (ids.length) el.setAttribute("aria-describedby", ids.join(" "));
+			else el.removeAttribute("aria-describedby");
+		};
+
+		// Fallback for older browsers without :user-invalid
+		const UserInvalidFallback = (() => {
+			const dirtyState = new WeakMap<
+				FormField,
+				{ hasInteracted: boolean; hasBlurred: boolean }
+			>();
+
+			const updateState = (input: FormField) => {
+				const isValid = input.validity.valid;
+				input.classList.toggle("user-invalid-fallback", !isValid);
+				input.classList.toggle("user-valid-fallback", isValid);
+				input.setAttribute("aria-invalid", isValid ? "false" : "true");
+				linkError(input, !isValid);
+			};
+
+			const handleEvent = (event: Event) => {
+				const target = event.target;
+				if (!target) return;
+
+				if (event.type === "reset" && target instanceof HTMLFormElement) {
+					for (const control of Array.from(target.elements)) {
+						if (!isFormField(control)) continue;
+						dirtyState.delete(control);
+						control.classList.remove(
+							"user-invalid-fallback",
+							"user-valid-fallback",
+						);
+						control.setAttribute("aria-invalid", "false");
+						if (control.dataset?.error) linkError(control, false);
+					}
+					return;
+				}
+
+				if (!isFormField(target)) {
+					return;
+				}
+
+				if (event.type === "invalid") {
+					dirtyState.set(target, { hasInteracted: true, hasBlurred: true });
+					updateState(target);
+					return;
+				}
+
+				if (event.type === "input" || event.type === "change") {
+					const state = dirtyState.get(target) || {
+						hasInteracted: false,
+						hasBlurred: false,
+					};
+					state.hasInteracted = true;
+					dirtyState.set(target, state);
+					if (state.hasBlurred) updateState(target);
+				} else if (event.type === "blur") {
+					const state = dirtyState.get(target) || {
+						hasInteracted: false,
+						hasBlurred: false,
+					};
+					state.hasBlurred = true;
+					dirtyState.set(target, state);
+					if (state.hasInteracted) updateState(target);
+				}
+			};
+
+			return {
+				init(root: HTMLFormElement) {
+					if (CSS.supports("selector(:user-invalid)")) return;
+					root
+						.querySelectorAll("input, select, textarea")
+						.forEach((el) => {
+							if (!el.hasAttribute("aria-invalid")) {
+								el.setAttribute("aria-invalid", "false");
+							}
+						});
+					root.addEventListener("blur", handleEvent, true);
+					root.addEventListener("input", handleEvent);
+					root.addEventListener("change", handleEvent);
+					root.addEventListener("invalid", handleEvent, true);
+					root.addEventListener("reset", handleEvent, true);
+				},
+			};
+		})();
+
+		UserInvalidFallback.init(form);
+
+		// Consistent ARIA synchronization & single polite live-region announcer
+		const announcer = document.createElement("div");
+		announcer.setAttribute("aria-live", "polite");
+		announcer.classList.add("visually-hidden");
+		document.body.appendChild(announcer);
+
+		let announceTimer: number | undefined;
+		let announcedField: FormField | null = null;
+
+		const spokenText = (node: Node): string => {
+			const copy = node.cloneNode(true) as HTMLElement;
+			copy.querySelectorAll('[aria-hidden="true"]').forEach((n) => n.remove());
+			copy.querySelectorAll('[role="img"][aria-label]').forEach((n) => {
+				n.replaceWith(`${n.getAttribute("aria-label")}: `);
+			});
+			return (copy.textContent || "").replace(/\s+/g, " ").trim();
+		};
+
+		const announceError = (el: FormField) => {
+			const errorId = el.dataset.error;
+			const error = errorId ? document.getElementById(errorId) : null;
+			if (!error) return;
+			const label = el.labels?.[0] ? `${spokenText(el.labels[0])}: ` : "";
+			window.clearTimeout(announceTimer);
+			announcer.textContent = "";
+			announcedField = el;
+			announceTimer = window.setTimeout(() => {
+				announcer.textContent = label + spokenText(error);
+			}, 500);
+		};
+
+		const flagged = new WeakSet<FormField>();
+		const announced = new WeakSet<FormField>();
+
+		const syncAria = (target: EventTarget | null, announce = false) => {
+			if (!isFormField(target)) {
+				return;
+			}
+			const invalid = CSS.supports("selector(:user-invalid)")
+				? target.matches(":user-invalid")
+				: target.classList.contains("user-invalid-fallback");
+
+			if (invalid) {
+				if (announce && !announced.has(target)) {
+					announceError(target);
+					announced.add(target);
+				}
+				target.setAttribute("aria-invalid", "true");
+				linkError(target, true);
+				flagged.add(target);
+			} else if (
+				flagged.has(target) ||
+				target.getAttribute("aria-invalid") !== "true"
+			) {
+				target.setAttribute("aria-invalid", "false");
+				linkError(target, false);
+				flagged.delete(target);
+				announced.delete(target);
+				if (announcedField === target) {
+					window.clearTimeout(announceTimer);
+					announcer.textContent = "";
+				}
+			}
+		};
+
+		form
+			.querySelectorAll("input, select, textarea")
+			.forEach((el) => syncAria(el));
+
+		form.addEventListener("blur", (e) => syncAria(e.target, true), true);
+		form.addEventListener("input", (e) => {
+			if (isFormField(e.target) && e.target.hasAttribute("aria-invalid")) {
+				syncAria(e.target);
+			}
+		});
+		form.addEventListener("change", (e) => syncAria(e.target, true), true);
+		form.addEventListener(
+			"invalid",
+			(e) => {
+				if (isFormField(e.target)) announced.add(e.target);
+				syncAria(e.target);
+			},
+			true,
+		);
+		form.addEventListener(
+			"reset",
+			() => {
+				if (successBanner) successBanner.hidden = true;
+				window.setTimeout(() => {
+					Array.from(form.elements).forEach((el) => syncAria(el));
+				});
+			},
+			true,
+		);
+
+		form.addEventListener("submit", (e) => {
+			e.preventDefault();
+			if (!form.checkValidity()) {
+				const firstInvalid = form.querySelector<HTMLElement>(":invalid");
+				firstInvalid?.focus();
+				return;
+			}
+			if (successBanner) {
+				successBanner.hidden = false;
+				successBanner.scrollIntoView({ behavior: "smooth", block: "nearest" });
+			}
+			form.reset();
+		});
+	}
+</script>
+
+<style>
+	.st-contact-layout {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+		align-items: start;
+		gap: clamp(2rem, 1.5rem + 3vw, 4rem);
+	}
+
+	.st-contact-info__lead {
+		font-size: 0.98rem;
+		line-height: 1.65;
+		color: var(--color-text-secondary);
+		margin-block-end: 1.75rem;
+	}
+
+	.st-contact-cards {
+		display: grid;
+		gap: 1rem;
+		list-style: none;
+	}
+
+	.st-contact-cards li {
+		display: grid;
+		grid-template-columns: 3rem minmax(0, 1fr);
+		align-items: start;
+		gap: 1rem;
+		padding: 1.15rem;
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius);
+	}
+
+	.st-contact-cards__icon {
+		display: grid;
+		place-items: center;
+		inline-size: 3rem;
+		block-size: 3rem;
+		background: var(--st-yellow);
+		color: #111111;
+		border-radius: var(--radius-sm);
+	}
+
+	.st-contact-cards__icon svg {
+		inline-size: 20px;
+		block-size: 20px;
+	}
+
+	.st-contact-cards h3 {
+		font-size: 0.875rem;
+		text-transform: uppercase;
+		margin-block-end: 0.2rem;
+	}
+
+	.st-contact-cards p {
+		font-size: 0.9rem;
+		color: var(--color-text-secondary);
+	}
+
+	.st-contact-cards a {
+		color: var(--color-text);
+		font-weight: 700;
+		text-decoration: none;
+	}
+
+	.st-contact-cards a:hover {
+		color: light-dark(#785000, #ffb600);
+	}
+
+	/* Form Panel */
+	.st-quote-panel {
+		padding: clamp(1.75rem, 1.25rem + 2vw, 2.75rem);
+		background: var(--color-surface);
+		border: 1px solid var(--color-border-strong);
+		border-block-start: 4px solid var(--st-yellow);
+		border-radius: var(--radius);
+		box-shadow: var(--shadow-card);
+	}
+
+	.st-quote-success {
+		margin-block-end: 1.5rem;
+		padding: 1.25rem 1.4rem;
+		border-inline-start: 4px solid #188038;
+		background: light-dark(#edf7ed, rgb(24 128 56 / 0.18));
+		border-radius: var(--radius-sm);
+	}
+
+	.st-quote-success h3 {
+		font-size: 1rem;
+		text-transform: uppercase;
+		color: light-dark(#13652c, #81c995);
+		margin-block-end: 0.35rem;
+	}
+
+	.st-quote-success p {
+		font-size: 0.9rem;
+		color: var(--color-text);
+	}
+
+	.st-form {
+		display: grid;
+		gap: 1.25rem;
+	}
+
+	.st-form__row {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 1.25rem;
+	}
+
+	.field {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.field label {
+		font-family: var(--font-heading);
+		font-size: 0.8rem;
+		font-weight: 800;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+		color: var(--color-text);
+		margin-block-end: 0.2rem;
+	}
+
+	.hint {
+		display: block;
+		color: var(--color-muted);
+		font-size: 0.8rem;
+		margin-block-end: 0.4rem;
+	}
+
+	.field :is(input, select, textarea) {
+		inline-size: 100%;
+		padding: 0.7rem 0.85rem;
+		border: 1.5px solid var(--color-border-strong);
+		border-radius: var(--radius-sm);
+		background: var(--color-bg);
+		color: var(--color-text);
+		font-family: var(--font-body);
+		font-size: 0.95rem;
+		transition:
+			border-color var(--transition-fast),
+			background-color var(--transition-fast);
+	}
+
+	.field :is(input, select) {
+		min-block-size: 44px;
+	}
+
+	.field :is(input, select, textarea):focus {
+		outline: 2px solid transparent;
+		border-color: var(--st-yellow);
+		box-shadow: 0 0 0 3px var(--color-brand-ring);
+	}
+
+	.error-msg {
+		display: none;
+		color: light-dark(#c5221f, #f28b82);
+		font-size: 0.825rem;
+		font-weight: 600;
+		margin-block-start: 0.35rem;
+	}
+
+	/* Interaction-deferred validation states (:user-invalid + fallback) */
+	.field :is(input, select, textarea):is(:user-invalid, .user-invalid-fallback) {
+		border-color: #d93025;
+		background-color: light-dark(#fce8e6, rgb(217 48 37 / 0.14));
+	}
+
+	.field
+		:is(input, select, textarea):is(:user-invalid, .user-invalid-fallback)
+		+ .error-msg {
+		display: block;
+	}
+
+	.field :is(input, select, textarea):is(:user-valid, .user-valid-fallback) {
+		border-color: #188038;
+	}
+
+	.st-form__actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		margin-block-start: 0.5rem;
+	}
+
+	@media (max-width: 900px) {
+		.st-contact-layout {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+
+	@media (max-width: 620px) {
+		.st-form__row {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+</style>

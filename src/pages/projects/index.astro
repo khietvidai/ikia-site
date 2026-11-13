@@ -1,0 +1,213 @@
+---
+import {
+	getEmDashCollection,
+	getTaxonomyTermsWithCacheHint,
+	getTermsForEntries,
+} from "emdash";
+import Base from "../../layouts/Base.astro";
+import PageBanner from "../../components/PageBanner.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
+
+const [projectsRes, termsRes] = await Promise.all([
+	getEmDashCollection("projects", { limit: 30 }),
+	getTaxonomyTermsWithCacheHint("project_category", { includeCounts: true }),
+]);
+
+if (Astro.cache?.enabled) {
+	Astro.cache.set(projectsRes.cacheHint);
+	Astro.cache.set(termsRes.cacheHint);
+}
+
+const projects = projectsRes.entries;
+const categories = termsRes.data;
+
+const catsByEntry = await getTermsForEntries(
+	"projects",
+	projects.map((p) => p.data.id),
+	"project_category",
+);
+
+const projectsWithCats = projects.map((project) => ({
+	project,
+	categories: (catsByEntry.get(project.data.id) ?? []).map((t) => ({
+		slug: t.slug,
+		label: t.label,
+	})),
+}));
+---
+
+<Base
+	title="Projects Portfolio"
+	description="Explore completed commercial, residential, civil, and architectural renovation projects by Structure Construction."
+>
+	<PageBanner
+		highlight="Our"
+		title="Projects"
+		subtitle="Delivered on schedule, within Guaranteed Maximum Price, and backed by ISO 9001 engineering quality."
+		backgroundImage="/images/structure/banner-projects.jpg"
+		breadcrumbs={[{ label: "Projects" }]}
+	/>
+
+	<section class="band section" data-portfolio-root>
+		<div class="frame">
+			<div class="st-portfolio-toolbar">
+				<div class="st-portfolio-filters" role="toolbar" aria-label="Filter portfolio">
+					<button
+						type="button"
+						class="st-portfolio-tab is-active"
+						data-filter="all"
+						aria-pressed="true"
+					>
+						All ({projects.length})
+					</button>
+					{
+						categories.map((cat) => (
+							<button
+								type="button"
+								class="st-portfolio-tab"
+								data-filter={cat.slug}
+								aria-pressed="false"
+							>
+								{cat.label}
+								{typeof cat.count === "number" ? ` (${cat.count})` : ""}
+							</button>
+						))
+					}
+				</div>
+
+				<a href="/contact#quote-form" class="st-btn st-btn--sm">
+					Start Your Project
+				</a>
+			</div>
+
+			{
+				projectsWithCats.length > 0 ? (
+					<div class="st-portfolio-grid">
+						{projectsWithCats.map(({ project, categories: itemCats }) => (
+							<div
+								class="st-portfolio-item"
+								data-portfolio-item={itemCats.map((c) => c.slug).join(" ")}
+							>
+								<ProjectCard
+									project={project}
+									categories={itemCats}
+									headingLevel={2}
+								/>
+							</div>
+						))}
+					</div>
+				) : (
+					<div class="empty-state">
+						<h2 class="empty-state__title">No projects yet</h2>
+						<p class="empty-state__text">
+							Add projects in EmDash Admin to showcase your portfolio.
+						</p>
+					</div>
+				)
+			}
+		</div>
+	</section>
+
+	<section class="st-quote-ribbon">
+		<div class="frame st-quote-ribbon__inner">
+			<div>
+				<h2 class="st-quote-ribbon__title">
+					Planning a similar commercial build or renovation?
+				</h2>
+				<p class="st-quote-ribbon__sub">
+					Benchmark your floor area in 30 seconds or speak directly with our
+					pre-construction engineers.
+				</p>
+			</div>
+			<div class="st-quote-ribbon__actions">
+				<a href="/cost-calculator" class="st-btn st-btn--navy">
+					Cost Calculator
+				</a>
+				<a href="/contact#quote-form" class="st-btn st-btn--ghost">
+					Request Proposal
+				</a>
+			</div>
+		</div>
+	</section>
+</Base>
+
+<script>
+	const root = document.querySelector<HTMLElement>("[data-portfolio-root]");
+	if (root) {
+		const tabs = [
+			...root.querySelectorAll<HTMLButtonElement>("[data-filter]"),
+		];
+		const cards = [
+			...root.querySelectorAll<HTMLElement>("[data-portfolio-item]"),
+		];
+
+		tabs.forEach((tab) => {
+			tab.addEventListener("click", () => {
+				const slug = tab.dataset.filter || "all";
+				tabs.forEach((t) => {
+					const active = t === tab;
+					t.classList.toggle("is-active", active);
+					t.setAttribute("aria-pressed", String(active));
+				});
+				cards.forEach((card) => {
+					const slugs = (card.dataset.portfolioItem || "").split(/\s+/);
+					card.hidden = !(slug === "all" || slugs.includes(slug));
+				});
+			});
+		});
+	}
+</script>
+
+<style>
+	.st-portfolio-toolbar {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--spacing-4);
+		margin-block-end: var(--spacing-8);
+		padding-block-end: var(--spacing-5);
+		border-block-end: 1px solid var(--color-border);
+	}
+
+	.st-portfolio-filters {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.45rem;
+	}
+
+	.st-portfolio-tab {
+		padding: 0.55rem 1rem;
+		border: 1px solid var(--color-border-strong);
+		border-radius: var(--radius-sm);
+		background: var(--color-surface);
+		color: var(--color-text);
+		font-family: var(--font-heading);
+		font-size: 0.76rem;
+		font-weight: 700;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		cursor: pointer;
+		transition:
+			background-color var(--transition-fast),
+			border-color var(--transition-fast),
+			color var(--transition-fast);
+	}
+
+	.st-portfolio-tab:hover,
+	.st-portfolio-tab.is-active {
+		background: var(--st-yellow);
+		border-color: var(--st-yellow);
+		color: #111111;
+	}
+
+	.st-portfolio-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+		gap: var(--spacing-6);
+	}
+
+	.st-portfolio-item[hidden] {
+		display: none;
+	}
+</style>

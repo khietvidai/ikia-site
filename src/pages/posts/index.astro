@@ -1,11 +1,10 @@
 ---
 import { getEmDashCollection, getTermsForEntries } from "emdash";
 import Base from "../../layouts/Base.astro";
+import PageBanner from "../../components/PageBanner.astro";
 import PostCard from "../../components/PostCard.astro";
 import Pagination from "../../components/Pagination.astro";
 
-// Sort in the database rather than in JS — lets the DB use its index on
-// published_at and avoids a full-table scan on the client.
 const cursor = Astro.url.searchParams.get("cursor") || undefined;
 const {
 	entries: posts,
@@ -13,20 +12,20 @@ const {
 	nextCursor,
 } = await getEmDashCollection("posts", {
 	orderBy: { published_at: "desc" },
-	limit: 20,
+	limit: 12,
 	cursor,
 });
 
 if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
 
-// Single batched query for tags across all posts, instead of one
-// getEntryTerms() call per post (which would be N round-trips).
-// Bylines are already hydrated on entry.data.bylines.
-const tagsByEntry = await getTermsForEntries(
-	"posts",
-	posts.map((p) => p.data.id),
-	"tag",
-);
+const tagsByEntry =
+	posts.length > 0
+		? await getTermsForEntries(
+				"posts",
+				posts.map((p) => p.data.id),
+				"tag",
+			)
+		: new Map();
 
 const postsWithTags = posts.map((post) => ({
 	post,
@@ -34,31 +33,34 @@ const postsWithTags = posts.map((post) => ({
 }));
 ---
 
-<Base title="All Posts" description="Browse all blog posts">
-	<header class="band intro">
-		<div class="frame">
-			<p class="eyebrow">Archive</p>
-			<h1 class="intro__title">All Posts</h1>
-			<p class="intro__lead">Every post, newest first.</p>
-		</div>
-	</header>
+<Base
+	title="Construction News & Field Insights"
+	description="Articles on structural engineering, architectural renovation, project management, and sustainable building."
+>
+	<PageBanner
+		highlight="Latest"
+		title="News"
+		subtitle="Field insights, adaptive-reuse case studies, and engineering perspectives from the Structure team."
+		backgroundImage="/images/structure/banner-blog.jpg"
+		breadcrumbs={[{ label: "News" }]}
+	/>
 
-	<section class="band section archive-band">
+	<section class="band section">
 		<div class="frame">
 			{
 				posts.length === 0 ? (
 					<div class="empty-state">
 						<h2 class="empty-state__title">
-							{cursor ? "No more posts" : "No posts yet"}
+							{cursor ? "No more articles" : "No articles published yet"}
 						</h2>
 						<p class="empty-state__text">
 							{cursor
-								? "You have reached the end of the archive."
-								: "Published posts will show up here."}
+								? "You have reached the end of the news archive."
+								: "Published articles will appear here."}
 						</p>
 						{cursor && (
 							<div class="empty-state__actions">
-								<a href="/posts" class="btn btn--ghost">
+								<a href="/posts" class="st-btn st-btn--ghost">
 									First page
 								</a>
 							</div>
@@ -66,13 +68,11 @@ const postsWithTags = posts.map((post) => ({
 					</div>
 				) : (
 					<>
-						<ol class="archive__list">
+						<div class="post-grid">
 							{postsWithTags.map(({ post, tags }) => (
-								<li>
-									<PostCard post={post} tags={tags} variant="row" />
-								</li>
+								<PostCard post={post} tags={tags} variant="card" headingLevel={2} />
 							))}
-						</ol>
+						</div>
 						<Pagination
 							basePath="/posts"
 							cursor={cursor}
@@ -84,18 +84,3 @@ const postsWithTags = posts.map((post) => ({
 		</div>
 	</section>
 </Base>
-
-<style>
-	/* The band's rule doubles as the first row divider */
-	.archive-band {
-		padding-block-start: 0;
-	}
-
-	.archive__list {
-		list-style: none;
-	}
-
-	.archive__list > li + li {
-		border-block-start: 1px solid var(--color-border);
-	}
-</style>

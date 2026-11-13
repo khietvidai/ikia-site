@@ -6,6 +6,7 @@ uploads
 data.db
 data.db-*
 .wrangler
+.DS_Store
 
 # Environment / Wrangler secrets
 .env

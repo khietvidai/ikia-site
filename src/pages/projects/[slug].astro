@@ -1,0 +1,331 @@
+---
+import {
+	getEmDashEntry,
+	getEmDashCollection,
+	getTermsForEntries,
+	getSeoMeta,
+	decodeSlug,
+	getSiteSettings,
+} from "emdash";
+import { Image, PortableText } from "emdash/ui";
+import Base from "../../layouts/Base.astro";
+import PageBanner from "../../components/PageBanner.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
+import {
+	resolveBlogSiteIdentity,
+	getMediaUrl,
+	STRUCTURE_CONTACT,
+} from "../../utils/site-identity";
+import "../../styles/prose.css";
+
+const slug = decodeSlug(Astro.params.slug);
+if (!slug) {
+	return Astro.rewrite("/404");
+}
+
+const { entry: project, cacheHint } = await getEmDashEntry("projects", slug);
+if (!project) {
+	return Astro.rewrite("/404");
+}
+
+if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+
+const ogImg = getMediaUrl(project.data.featured_image, Astro.url.origin);
+const { siteTitle } = resolveBlogSiteIdentity(await getSiteSettings());
+const seo = getSeoMeta(project, {
+	siteTitle,
+	siteUrl: Astro.url.origin,
+	path: Astro.url.pathname.replace(/\/$/, ""),
+	defaultOgImage: ogImg,
+});
+
+const categories = project.data.terms?.project_category ?? [];
+
+const { entries: allProjects, cacheHint: relHint } = await getEmDashCollection(
+	"projects",
+	{ limit: 4 },
+);
+if (Astro.cache?.enabled) Astro.cache.set(relHint);
+const relatedProjects = allProjects
+	.filter((p) => p.id !== project.id)
+	.slice(0, 3);
+const relCatsByEntry = await getTermsForEntries(
+	"projects",
+	relatedProjects.map((p) => p.data.id),
+	"project_category",
+);
+
+const specs = [
+	{ label: "Client", value: project.data.client },
+	{ label: "Location", value: project.data.location },
+	{ label: "Surface Area", value: project.data.surface_area },
+	{ label: "Year Completed", value: project.data.year_completed },
+	{ label: "Contract Value", value: project.data.project_value },
+	{ label: "Lead Architect", value: project.data.architect },
+].filter((s) => s.value);
+---
+
+<Base
+	title={seo.title}
+	pageTitle={seo.ogTitle}
+	description={seo.description}
+	image={seo.ogImage}
+	canonical={seo.canonical}
+	robots={seo.robots}
+	content={{ collection: "projects", id: project.data.id, slug }}
+>
+	<PageBanner
+		title={String(project.data.title)}
+		subtitle={project.data.excerpt ? String(project.data.excerpt) : undefined}
+		backgroundImage="/images/structure/banner-projects.jpg"
+		breadcrumbs={[
+			{ label: "Projects", href: "/projects" },
+			{ label: String(project.data.title) },
+		]}
+	/>
+
+	<article class="band section">
+		<div class="frame st-proj-detail">
+			<div class="st-proj-detail__main">
+				{
+					project.data.featured_image && (
+						<div class="st-proj-detail__hero" {...project.edit.featured_image}>
+							<Image
+								image={project.data.featured_image}
+								sizes="(min-width: 1024px) 780px, 94vw"
+								priority
+							/>
+						</div>
+					)
+				}
+
+				<div class="st-proj-detail__heading-row">
+					<p class="st-kicker">Project Case Study</p>
+					<h2 class="st-heading" {...project.edit.title}>
+						{project.data.title}
+					</h2>
+				</div>
+
+				<div class="prose st-proj-detail__prose" {...project.edit.content}>
+					<PortableText value={project.data.content} />
+				</div>
+			</div>
+
+			<aside class="st-proj-detail__sidebar" aria-label="Project specifications">
+				<div class="st-spec-box">
+					<h2 class="st-spec-box__title">Project Details</h2>
+					<dl class="st-spec-box__list">
+						{
+							specs.map((spec) => (
+								<div>
+									<dt>{spec.label}</dt>
+									<dd>{spec.value}</dd>
+								</div>
+							))
+						}
+						{
+							categories.length > 0 && (
+								<div>
+									<dt>Sector / Scope</dt>
+									<dd class="st-spec-box__tags">
+										{categories.map((c) => (
+											<a href={`/project-category/${c.slug}`} class="chip">
+												{c.label}
+											</a>
+										))}
+									</dd>
+								</div>
+							)
+						}
+					</dl>
+				</div>
+
+				<div class="st-cta-box">
+					<p class="st-kicker st-kicker--on-dark">Build With Structure</p>
+					<h3>Planning a Similar Project?</h3>
+					<p>
+						Request an itemized quantity takeoff and preliminary schedule for
+						your site.
+					</p>
+					<a
+						href={`/contact?estimate=${encodeURIComponent(`Similar to ${project.data.title}`)}#quote-form`}
+						class="st-btn"
+					>
+						Request Free Estimate
+					</a>
+					<a href={STRUCTURE_CONTACT.phoneHref} class="st-cta-box__phone">
+						Call Direct: {STRUCTURE_CONTACT.phone}
+					</a>
+				</div>
+			</aside>
+		</div>
+	</article>
+
+	{
+		relatedProjects.length > 0 && (
+			<section class="band section st-related-band" aria-labelledby="related-projects-heading">
+				<div class="frame">
+					<div class="st-section-header">
+						<div>
+							<p class="st-kicker">More Landmarks</p>
+							<h2 id="related-projects-heading" class="st-heading">
+								Related Projects
+							</h2>
+						</div>
+						<a href="/projects" class="arrow-link">
+							All Projects
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+								<path d="M5 12h14"></path>
+								<path d="m12 5 7 7-7 7"></path>
+							</svg>
+						</a>
+					</div>
+
+					<div class="post-grid">
+						{relatedProjects.map((rel) => (
+							<ProjectCard
+								project={rel}
+								categories={(relCatsByEntry.get(rel.data.id) ?? []).map(
+									(t) => ({ slug: t.slug, label: t.label }),
+								)}
+								headingLevel={3}
+							/>
+						))}
+					</div>
+				</div>
+			</section>
+		)
+	}
+</Base>
+
+<style>
+	.st-proj-detail {
+		display: grid;
+		grid-template-columns: minmax(0, 1.85fr) minmax(280px, 1fr);
+		align-items: start;
+		gap: clamp(2rem, 1.5rem + 2.5vw, 3.5rem);
+	}
+
+	.st-proj-detail__hero {
+		overflow: hidden;
+		border-radius: var(--radius);
+		border-block-end: 4px solid var(--st-yellow);
+		margin-block-end: var(--spacing-8);
+		background: var(--st-navy);
+	}
+
+	.st-proj-detail__hero :global(img) {
+		inline-size: 100%;
+		max-inline-size: none;
+		aspect-ratio: 16 / 10;
+		object-fit: cover;
+	}
+
+	.st-proj-detail__heading-row {
+		margin-block-end: var(--spacing-5);
+	}
+
+	.st-proj-detail__sidebar {
+		position: sticky;
+		inset-block-start: calc(var(--nav-height) + var(--spacing-6));
+		display: grid;
+		gap: var(--spacing-6);
+	}
+
+	.st-spec-box {
+		padding: 1.75rem;
+		background: var(--color-surface);
+		border: 1px solid var(--color-border-strong);
+		border-block-start: 4px solid var(--st-yellow);
+		border-radius: var(--radius);
+		box-shadow: var(--shadow-sm);
+	}
+
+	.st-spec-box__title {
+		font-size: 1.05rem;
+		text-transform: uppercase;
+		margin-block-end: 1.15rem;
+	}
+
+	.st-spec-box__list {
+		display: grid;
+		gap: 0.85rem;
+	}
+
+	.st-spec-box__list > div {
+		padding-block-end: 0.85rem;
+		border-block-end: 1px solid var(--color-border-subtle);
+	}
+
+	.st-spec-box__list > div:last-child {
+		padding-block-end: 0;
+		border-block-end: 0;
+	}
+
+	.st-spec-box__list dt {
+		font-family: var(--font-heading);
+		font-size: 0.72rem;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--color-muted);
+	}
+
+	.st-spec-box__list dd {
+		margin-block-start: 0.25rem;
+		font-size: 0.95rem;
+		font-weight: 700;
+		color: var(--color-text);
+	}
+
+	.st-spec-box__tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.35rem;
+		margin-block-start: 0.4rem !important;
+	}
+
+	.st-cta-box {
+		display: flex;
+		flex-direction: column;
+		gap: 0.85rem;
+		padding: 1.75rem;
+		background: var(--st-navy);
+		color: #ffffff;
+		border-radius: var(--radius);
+	}
+
+	.st-cta-box h3 {
+		font-size: 1.15rem;
+		text-transform: uppercase;
+		color: #ffffff;
+	}
+
+	.st-cta-box p {
+		font-size: 0.9rem;
+		line-height: 1.55;
+		color: var(--st-navy-muted);
+	}
+
+	.st-cta-box__phone {
+		font-family: var(--font-mono);
+		font-size: 0.82rem;
+		text-align: center;
+		color: var(--st-yellow) !important;
+		text-decoration: none !important;
+	}
+
+	.st-related-band {
+		background: var(--color-bg-subtle);
+	}
+
+	@media (max-width: 920px) {
+		.st-proj-detail {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.st-proj-detail__sidebar {
+			position: static;
+		}
+	}
+</style>

@@ -1,0 +1,94 @@
+---
+import {
+	getTaxonomyTermsWithCacheHint,
+	getEmDashCollection,
+	getTermsForEntries,
+	decodeSlug,
+} from "emdash";
+import Base from "../../layouts/Base.astro";
+import PageBanner from "../../components/PageBanner.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
+
+const slug = decodeSlug(Astro.params.slug);
+const termsRes = await getTaxonomyTermsWithCacheHint("project_category", {
+	includeCounts: false,
+});
+const term = slug ? termsRes.data.find((t) => t.slug === slug) : null;
+
+if (!term) {
+	return Astro.rewrite("/404");
+}
+
+const { entries: projects, cacheHint } = await getEmDashCollection("projects", {
+	where: { project_category: term.slug },
+	limit: 24,
+});
+
+if (Astro.cache?.enabled) {
+	Astro.cache.set(termsRes.cacheHint);
+	Astro.cache.set(cacheHint);
+}
+
+const catsByEntry = await getTermsForEntries(
+	"projects",
+	projects.map((p) => p.data.id),
+	"project_category",
+);
+---
+
+<Base
+	title={`${term.label} Projects`}
+	description={term.description || `Construction projects in ${term.label}`}
+>
+	<PageBanner
+		highlight={term.label}
+		title="Projects"
+		subtitle={term.description || `Completed case studies classified under ${term.label}.`}
+		backgroundImage="/images/structure/banner-projects.jpg"
+		breadcrumbs={[
+			{ label: "Projects", href: "/projects" },
+			{ label: term.label },
+		]}
+	/>
+
+	<section class="band section">
+		<div class="frame">
+			<div class="st-section-header">
+				<div>
+					<p class="st-kicker">Project Category</p>
+					<h2 class="st-heading">{term.label}</h2>
+				</div>
+				<a href="/projects" class="arrow-link">
+					View All Projects
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+						<path d="M5 12h14"></path>
+						<path d="m12 5 7 7-7 7"></path>
+					</svg>
+				</a>
+			</div>
+
+			{
+				projects.length > 0 ? (
+					<div class="post-grid">
+						{projects.map((project) => (
+							<ProjectCard
+								project={project}
+								categories={(catsByEntry.get(project.data.id) ?? []).map(
+									(t) => ({ slug: t.slug, label: t.label }),
+								)}
+								headingLevel={3}
+							/>
+						))}
+					</div>
+				) : (
+					<div class="empty-state">
+						<h3 class="empty-state__title">No projects in this category</h3>
+						<div class="empty-state__actions">
+							<a href="/projects" class="st-btn">Browse All Projects</a>
+						</div>
+					</div>
+				)
+			}
+		</div>
+	</section>
+</Base>

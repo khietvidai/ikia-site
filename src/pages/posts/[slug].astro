@@ -123,7 +123,7 @@ const hasHeadings = (post.data.content ?? []).some(
 	content={{ collection: "posts", id: post.data.id, slug }}
 >
 	<article class="post">
-		<header class="intro post-header">
+		<header class="intro post-header st-post-banner">
 			<div class="frame">
 				<div class="post-header__inner">
 					<a href="/posts" class="arrow-link back-link">
@@ -139,7 +139,7 @@ const hasHeadings = (post.data.content ?? []).some(
 							<path d="M19 12H5"></path>
 							<path d="m12 19-7-7 7-7"></path>
 						</svg>
-						All posts
+						All News Articles
 					</a>
 					{
 						tags.length > 0 && (
@@ -369,8 +369,10 @@ const hasHeadings = (post.data.content ?? []).some(
 <style>
 	/* Header */
 	.post-header {
-		padding-block: clamp(2rem, 1.25rem + 3vw, 4rem)
-			clamp(2.5rem, 1.75rem + 2.5vw, 3.5rem);
+		padding-block: clamp(2.25rem, 1.5rem + 3vw, 4rem)
+			clamp(2.25rem, 1.5rem + 2.5vw, 3.25rem);
+		background: linear-gradient(180deg, var(--color-fill) 0%, transparent 100%);
+		border-block-start: 4px solid var(--st-yellow);
 	}
 
 	.post-header__inner {

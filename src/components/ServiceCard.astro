@@ -1,0 +1,241 @@
+---
+import type { ContentEntry, InferCollectionData } from "emdash";
+import { Image } from "emdash/ui";
+
+interface Props {
+	service: ContentEntry<InferCollectionData<"services">>;
+	headingLevel?: 2 | 3;
+	priority?: boolean;
+}
+
+const { service, headingLevel = 3, priority = false } = Astro.props;
+const Heading = `h${headingLevel}` as const;
+const href = `/services/${service.id}`;
+const title = String(service.data.title ?? "Service");
+const excerpt = service.data.excerpt ? String(service.data.excerpt) : null;
+const priceRange = service.data.price_range
+	? String(service.data.price_range)
+	: null;
+const iconKey = String(service.data.icon ?? "blueprint");
+---
+
+<article class="st-service-card">
+	<a href={href} class="st-service-card__media" tabindex="-1" aria-hidden="true">
+		{
+			service.data.featured_image ? (
+				<div class="st-service-card__img" {...service.edit.featured_image}>
+					<Image
+						image={service.data.featured_image}
+						width={380}
+						height={238}
+						quality={72}
+						formats={["webp"]}
+						placeholder={false}
+						sizes="(min-width: 1080px) 360px, (min-width: 680px) 45vw, 360px"
+						priority={priority}
+						decoding="async"
+					/>
+				</div>
+			) : (
+				<div class="st-service-card__fallback" />
+			)
+		}
+		<span class="st-service-card__badge" aria-hidden="true">
+			{iconKey === "renovation" && (
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<path d="m15 12-8.373 8.373a1 1 0 1 1-3-3L12 9"></path>
+					<path d="m18 15 4-4"></path>
+					<path d="m21.5 11.5-1.914-1.914A2 2 0 0 1 19 8.172V7l-2.26-2.26a6 6 0 0 0-4.202-1.756L9 2.96l.92.82A6.18 6.18 0 0 1 12 8.4V10l2 2h1.172a2 2 0 0 1 1.414.586L18.5 14.5"></path>
+				</svg>
+			)}
+			{iconKey === "management" && (
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect>
+					<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+					<path d="m9 14 2 2 4-4"></path>
+				</svg>
+			)}
+			{iconKey === "consulting" && (
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<path d="M2 18a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v2z"></path>
+					<path d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"></path>
+					<path d="M4 15v-3a6 6 0 0 1 6-6h0"></path>
+					<path d="M14 6h0a6 6 0 0 1 6 6v3"></path>
+				</svg>
+			)}
+			{iconKey === "architecture" && (
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<path d="m12 3-8 4.5v9L12 21l8-4.5v-9L12 3z"></path>
+					<path d="m12 12 8-4.5"></path>
+					<path d="M12 12v9"></path>
+					<path d="M12 12 4 7.5"></path>
+				</svg>
+			)}
+			{iconKey === "concrete" && (
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<rect x="2" y="6" width="20" height="8" rx="1"></rect>
+					<path d="M17 14v7"></path>
+					<path d="M7 14v7"></path>
+					<path d="M17 3v3"></path>
+					<path d="M7 3v3"></path>
+					<path d="M10 14 2.3 6.3"></path>
+					<path d="m14 6 7.7 7.7"></path>
+				</svg>
+			)}
+			{!["renovation", "management", "consulting", "architecture", "concrete"].includes(iconKey) && (
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<path d="M3 21h18"></path>
+					<path d="M5 21V7l8-4v18"></path>
+					<path d="M19 21V11l-6-4"></path>
+					<path d="M9 9v.01M9 12v.01M9 15v.01M9 18v.01"></path>
+				</svg>
+			)}
+		</span>
+	</a>
+
+	<div class="st-service-card__body">
+		<Heading class="st-service-card__title" {...service.edit.title}>
+			<a href={href}>{title}</a>
+		</Heading>
+		{
+			excerpt && (
+				<p class="st-service-card__excerpt" {...service.edit.excerpt}>
+					{excerpt}
+				</p>
+			)
+		}
+		<div class="st-service-card__footer">
+			{priceRange && <span class="st-service-card__rate">{priceRange}</span>}
+			<a href={href} class="arrow-link st-service-card__more">
+				Read more<span class="sr-only"> about {title}</span>
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+					<path d="M5 12h14"></path>
+					<path d="m12 5 7 7-7 7"></path>
+				</svg>
+			</a>
+		</div>
+	</div>
+</article>
+
+<style>
+	.st-service-card {
+		display: flex;
+		flex-direction: column;
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-block-end: 3px solid transparent;
+		border-radius: var(--radius);
+		overflow: hidden;
+		box-shadow: var(--shadow-sm);
+		transition:
+			border-color var(--transition-base),
+			box-shadow var(--transition-base),
+			translate var(--transition-base);
+	}
+
+	.st-service-card:hover {
+		border-block-end-color: var(--st-yellow);
+		box-shadow: var(--shadow-card-hover);
+		translate: 0 -3px;
+	}
+
+	.st-service-card__media {
+		position: relative;
+		display: block;
+		aspect-ratio: 16 / 10;
+		overflow: hidden;
+		background: var(--st-navy);
+	}
+
+	.st-service-card__img {
+		inline-size: 100%;
+		block-size: 100%;
+	}
+
+	.st-service-card__img :global(img) {
+		inline-size: 100%;
+		block-size: 100%;
+		max-inline-size: none;
+		object-fit: cover;
+		transition: scale 450ms var(--ease-out);
+	}
+
+	.st-service-card:hover .st-service-card__img :global(img) {
+		scale: 1.05;
+	}
+
+	.st-service-card__fallback {
+		inline-size: 100%;
+		block-size: 100%;
+		background: linear-gradient(135deg, var(--st-navy), var(--st-navy-deep));
+	}
+
+	.st-service-card__badge {
+		position: absolute;
+		inset-block-end: 0;
+		inset-inline-start: 1.25rem;
+		display: grid;
+		place-items: center;
+		inline-size: 3rem;
+		block-size: 3rem;
+		background: var(--st-yellow);
+		color: #111111;
+	}
+
+	.st-service-card__badge svg {
+		inline-size: 22px;
+		block-size: 22px;
+	}
+
+	.st-service-card__body {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		gap: 0.75rem;
+		padding: 1.5rem 1.4rem 1.35rem;
+	}
+
+	.st-service-card__title {
+		font-size: 1.125rem;
+		font-weight: 800;
+		text-transform: uppercase;
+		letter-spacing: 0.02em;
+	}
+
+	.st-service-card__title a {
+		color: var(--color-text);
+		text-decoration: none;
+	}
+
+	.st-service-card__title a:hover {
+		color: light-dark(#785000, #ffb600);
+	}
+
+	.st-service-card__excerpt {
+		font-size: 0.925rem;
+		line-height: 1.6;
+		color: var(--color-text-secondary);
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.st-service-card__footer {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.5rem;
+		margin-block-start: auto;
+		padding-block-start: 0.9rem;
+		border-block-start: 1px solid var(--color-border-subtle);
+	}
+
+	.st-service-card__rate {
+		font-family: var(--font-mono);
+		font-size: 0.75rem;
+		font-weight: 500;
+		color: var(--color-muted);
+	}
+</style>

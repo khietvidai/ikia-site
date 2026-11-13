@@ -1,194 +1,1194 @@
 ---
 import {
 	getEmDashCollection,
+	getTaxonomyTermsWithCacheHint,
 	getTermsForEntries,
-	getSiteSettings,
+	getSiteSettingsWithCacheHint,
 } from "emdash";
+import { Image } from "emdash/ui";
 import Base from "../layouts/Base.astro";
+import ServiceCard from "../components/ServiceCard.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import CostCalculator from "../components/CostCalculator.astro";
 import PostCard from "../components/PostCard.astro";
 import { resolveBlogSiteIdentity } from "../utils/site-identity";
 
-// Limit to what we render (1 featured + 6 grid). The DB does the slicing
-// instead of fetching every post and discarding the tail in JS.
-const POSTS_PER_PAGE = 7;
-
-const [{ entries: posts, cacheHint }, settings] = await Promise.all([
+const [
+	servicesRes,
+	projectsRes,
+	projectTermsRes,
+	testimonialsRes,
+	postsRes,
+	settingsRes,
+] = await Promise.all([
+	getEmDashCollection("services", { limit: 6 }),
+	getEmDashCollection("projects", { limit: 8 }),
+	getTaxonomyTermsWithCacheHint("project_category", { includeCounts: false }),
+	getEmDashCollection("testimonials", { limit: 4 }),
 	getEmDashCollection("posts", {
 		orderBy: { published_at: "desc" },
-		limit: POSTS_PER_PAGE + 1, // +1 to detect "view all" need
+		limit: 3,
 	}),
-	getSiteSettings(),
+	getSiteSettingsWithCacheHint(),
 ]);
-const { siteTitle, siteTagline } = resolveBlogSiteIdentity(settings);
 
-if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+if (Astro.cache?.enabled) {
+	Astro.cache.set(servicesRes.cacheHint);
+	Astro.cache.set(projectsRes.cacheHint);
+	Astro.cache.set(projectTermsRes.cacheHint);
+	Astro.cache.set(testimonialsRes.cacheHint);
+	Astro.cache.set(postsRes.cacheHint);
+	Astro.cache.set(settingsRes.cacheHint);
+}
 
-// Trim the lookahead post used to detect overflow
-const visiblePosts = posts.slice(0, POSTS_PER_PAGE);
-const hasMorePosts = posts.length > POSTS_PER_PAGE;
+const { siteTitle, siteTagline } = resolveBlogSiteIdentity(settingsRes.data);
 
-// Find the first post with a featured image for the hero
-const featuredPost = visiblePosts.find((p) => p.data.featured_image);
-const featuredIndex = featuredPost ? visiblePosts.indexOf(featuredPost) : -1;
+const services = servicesRes.entries;
+const projects = projectsRes.entries;
+const projectCategories = projectTermsRes.data;
+const testimonials = testimonialsRes.entries;
+const posts = postsRes.entries;
 
-// Get remaining posts (exclude featured if found, limit to 6 for grid)
-const gridPosts = visiblePosts
-	.filter((_, i) => i !== featuredIndex)
-	.slice(0, 6);
+const [projectCatsByEntry, postTagsByEntry] = await Promise.all([
+	getTermsForEntries(
+		"projects",
+		projects.map((p) => p.data.id),
+		"project_category",
+	),
+	getTermsForEntries(
+		"posts",
+		posts.map((p) => p.data.id),
+		"tag",
+	),
+]);
 
-// Single batched query for tags across the featured post + grid posts.
-// Avoids the N+1 pattern of calling getEntryTerms() per entry.
-// Bylines are already hydrated on entry.data.bylines by getEmDashCollection.
-const tagEntryIds = [
-	...(featuredPost ? [featuredPost.data.id] : []),
-	...gridPosts.map((p) => p.data.id),
-];
-const tagsByEntry = await getTermsForEntries("posts", tagEntryIds, "tag");
-
-const featuredTags = featuredPost
-	? (tagsByEntry.get(featuredPost.data.id) ?? []).map((t) => ({
-			slug: t.slug,
-			label: t.label,
-		}))
-	: [];
-
-const gridPostsWithTags = gridPosts.map((post) => ({
-	post,
-	tags: (tagsByEntry.get(post.data.id) ?? []).map((t) => ({
+const projectsWithCats = projects.map((project) => ({
+	project,
+	categories: (projectCatsByEntry.get(project.data.id) ?? []).map((t) => ({
 		slug: t.slug,
 		label: t.label,
 	})),
 }));
+
+const postsWithTags = posts.map((post) => ({
+	post,
+	tags: (postTagsByEntry.get(post.data.id) ?? []).map((t) => ({
+		slug: t.slug,
+		label: t.label,
+	})),
+}));
+
+const heroSlides = [
+	{
+		image: "/images/structure/hero-1.webp",
+		srcset:
+			"/images/structure/hero-1-640.webp 640w, /images/structure/hero-1-768.webp 768w, /images/structure/hero-1-1080.webp 1080w, /images/structure/hero-1.webp 1920w",
+		alt: "Structural steel and crane operations on a modern commercial build",
+		kicker: "Welcome to Structure Construction",
+		headline: "Building Great Things",
+		lead: "Turnkey Design-Build, Commercial Contracting & Civil Engineering backed by ISO 9001 quality governance and a 10-year structural warranty.",
+		primaryCta: { label: "Explore Projects", href: "/projects" },
+		secondaryCta: { label: "Get a Free Quote", href: "/contact#quote-form" },
+	},
+	{
+		image: "/images/structure/hero-2.webp",
+		srcset:
+			"/images/structure/hero-2-640.webp 640w, /images/structure/hero-2-768.webp 768w, /images/structure/hero-2-1080.webp 1080w, /images/structure/hero-2.webp 1920w",
+		alt: "Field engineers inspecting architectural concrete and site blueprints",
+		kicker: "5D BIM & Pre-Construction Certainty",
+		headline: "On Time & On GMP Budget",
+		lead: "Eliminate change-order surprises with clash-free BIM modeling, open-book Guaranteed Maximum Price schedules, and self-performing structural crews.",
+		primaryCta: { label: "Cost Calculator", href: "/cost-calculator" },
+		secondaryCta: { label: "Our Services", href: "/services" },
+	},
+	{
+		image: "/images/structure/hero-3.webp",
+		srcset:
+			"/images/structure/hero-3-640.webp 640w, /images/structure/hero-3-768.webp 768w, /images/structure/hero-3-1080.webp 1080w, /images/structure/hero-3.webp 1920w",
+		alt: "Contemporary architectural facade and sustainable building envelope",
+		kicker: "Renovation & Net-Zero Retrofits",
+		headline: "Engineered To Endure",
+		lead: "From heritage masonry stabilization to LEED Platinum commercial upgrades, our superintendents protect every millimeter of craftsmanship.",
+		primaryCta: { label: "About Structure", href: "/pages/about" },
+		secondaryCta: { label: "Speak With an Engineer", href: "/contact" },
+	},
+];
+
+const stats = [
+	{ number: "2,368", label: "Projects Completed" },
+	{ number: "999+", label: "Engineers & Skilled Crew" },
+	{ number: "124", label: "Safety & Build Awards" },
+	{ number: "18+", label: "Years Field Excellence" },
+];
+
+const partnerLogos = [
+	{ src: "/images/structure/client-01.png", alt: "Partner 01" },
+	{ src: "/images/structure/client-02.png", alt: "Partner 02" },
+	{ src: "/images/structure/client-03.png", alt: "Partner 03" },
+	{ src: "/images/structure/client-04.png", alt: "Partner 04" },
+	{ src: "/images/structure/client-05.png", alt: "Partner 05" },
+	{ src: "/images/structure/client-06.png", alt: "Partner 06" },
+];
 ---
 
 <Base title={siteTitle} description={siteTagline}>
-	<header class="band intro">
-		<div class="frame home-intro">
-			<div>
-				<p class="eyebrow">Blog</p>
-				<h1 class="intro__title">{siteTitle}</h1>
-				{siteTagline && <p class="intro__subtitle">{siteTagline}</p>}
-			</div>
-			<a
-				href="/rss.xml"
-				type="application/rss+xml"
-				class="btn btn--ghost btn--sm home-intro__rss"
-			>
-				<svg
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="1.75"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					aria-hidden="true"
-				>
-					<path d="M4 11a9 9 0 0 1 9 9"></path>
-					<path d="M4 4a16 16 0 0 1 16 16"></path>
-					<circle cx="5" cy="19" r="1"></circle>
-				</svg>
-				RSS feed
-			</a>
-		</div>
-	</header>
+	<Fragment slot="head">
+		<link
+			rel="preload"
+			as="image"
+			href="/images/structure/hero-1.webp"
+			imagesrcset="/images/structure/hero-1-640.webp 640w, /images/structure/hero-1-768.webp 768w, /images/structure/hero-1-1080.webp 1080w, /images/structure/hero-1.webp 1920w"
+			imagesizes="100vw"
+			fetchpriority="high"
+		/>
+	</Fragment>
 
-	{
-		posts.length === 0 ? (
-			<section class="band section">
-				<div class="frame">
+	<!-- 1. Hero Multi-Slide Banner -->
+	<section class="st-hero" aria-roledescription="carousel" aria-label="Featured highlights" data-hero-carousel>
+		<div class="st-hero__slides">
+			{
+				heroSlides.map((slide, idx) => (
+					<div
+						class:list={["st-hero__slide", { "is-active": idx === 0 }]}
+						role="group"
+						aria-roledescription="slide"
+						aria-label={`${idx + 1} of ${heroSlides.length}`}
+						aria-hidden={idx === 0 ? "false" : "true"}
+						data-hero-slide={idx}
+					>
+						{idx === 0 ? (
+							<img
+								src={slide.image}
+								srcset={slide.srcset}
+								sizes="100vw"
+								alt={slide.alt}
+								width="1920"
+								height="680"
+								class="st-hero__bg"
+								fetchpriority="high"
+								decoding="async"
+							/>
+						) : (
+							<img
+								data-src={slide.image}
+								data-srcset={slide.srcset}
+								sizes="100vw"
+								alt={slide.alt}
+								width="1920"
+								height="680"
+								class="st-hero__bg"
+								fetchpriority="low"
+								decoding="async"
+							/>
+						)}
+						<div class="st-hero__overlay" aria-hidden="true" />
+						<div class="frame st-hero__content">
+							<p class="st-hero__kicker">{slide.kicker}</p>
+							{idx === 0 ? (
+								<h1 class="st-hero__title">
+									<span class="st-brackets">{slide.headline}</span>
+								</h1>
+							) : (
+								<h2 class="st-hero__title">
+									<span class="st-brackets">{slide.headline}</span>
+								</h2>
+							)}
+							<p class="st-hero__lead">{slide.lead}</p>
+							<div class="st-hero__actions">
+								<a href={slide.primaryCta.href} class="st-btn">
+									{slide.primaryCta.label}
+								</a>
+								<a href={slide.secondaryCta.href} class="st-btn st-btn--outline-light">
+									{slide.secondaryCta.label}
+								</a>
+							</div>
+						</div>
+					</div>
+				))
+			}
+		</div>
+
+		<div class="frame st-hero__controls">
+			<div class="st-hero__dots" role="group" aria-label="Choose slide">
+				{
+					heroSlides.map((slide, idx) => (
+						<button
+							type="button"
+							class:list={["st-hero__dot", { "is-active": idx === 0 }]}
+							aria-current={idx === 0 ? "true" : undefined}
+							aria-label={`Slide ${idx + 1}: ${slide.headline}`}
+							data-hero-dot={idx}
+						/>
+					))
+				}
+			</div>
+			<div class="st-hero__arrows">
+				<button type="button" class="st-hero__arrow" aria-label="Previous slide" data-hero-prev>
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+						<path d="m15 18-6-6 6-6"></path>
+					</svg>
+				</button>
+				<button type="button" class="st-hero__arrow" aria-label="Next slide" data-hero-next>
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+						<path d="m9 18 6-6-6-6"></path>
+					</svg>
+				</button>
+			</div>
+		</div>
+	</section>
+
+	<!-- 2. Iconic Structure Yellow CTA Ribbon -->
+	<section class="st-quote-ribbon" aria-label="Quick quote callout">
+		<div class="frame st-quote-ribbon__inner">
+			<div>
+				<h2 class="st-quote-ribbon__title">
+					Looking for a high-quality constructor for your next project?
+				</h2>
+				<p class="st-quote-ribbon__sub">
+					Receive an itemized CSI MasterFormat pre-construction estimate within
+					5 business days.
+				</p>
+			</div>
+			<div class="st-quote-ribbon__actions">
+				<a href="/contact#quote-form" class="st-btn st-btn--navy">
+					Get a Quote
+				</a>
+				<a href="#home-estimator" class="st-btn st-btn--ghost">
+					30s Cost Estimator
+				</a>
+			</div>
+		</div>
+	</section>
+
+	<!-- 3. Our Core Services -->
+	<section class="band section" aria-labelledby="home-services-heading">
+		<div class="frame">
+			<div class="st-section-header">
+				<div>
+					<p class="st-kicker">What We Do Best</p>
+					<h2 id="home-services-heading" class="st-heading">Our Services</h2>
+				</div>
+				<a href="/services" class="arrow-link">
+					All Construction Services
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+						<path d="M5 12h14"></path>
+						<path d="m12 5 7 7-7 7"></path>
+					</svg>
+				</a>
+			</div>
+
+			{
+				services.length > 0 ? (
+					<div class="st-grid-3">
+						{services.map((service) => (
+							<ServiceCard service={service} headingLevel={3} />
+						))}
+					</div>
+				) : (
 					<div class="empty-state">
-						<h2 class="empty-state__title">No posts yet</h2>
+						<h3 class="empty-state__title">Services ready to seed</h3>
 						<p class="empty-state__text">
-							Create your first post in the admin panel.
+							Complete initial EmDash setup to populate sample services.
 						</p>
-						<div class="empty-state__actions">
-							<a href="/_emdash/admin/content/posts/new" class="btn">
-								Create a post
+					</div>
+				)
+			}
+		</div>
+	</section>
+
+	<!-- 4. Filterable Featured Projects Showcase -->
+	<section class="st-projects-band section st-defer-section" aria-labelledby="home-projects-heading" data-project-filter-root>
+		<div class="frame">
+			<div class="st-section-header">
+				<div>
+					<p class="st-kicker st-kicker--on-dark">Recent Landmarks</p>
+					<h2 id="home-projects-heading" class="st-heading st-heading--on-dark">
+						Featured Works
+					</h2>
+				</div>
+
+				<div class="st-filter-tabs" role="toolbar" aria-label="Filter projects by category">
+					<button
+						type="button"
+						class="st-filter-btn is-active"
+						data-filter="all"
+						aria-pressed="true"
+					>
+						All Works
+					</button>
+					{
+						projectCategories.map((cat) => (
+							<button
+								type="button"
+								class="st-filter-btn"
+								data-filter={cat.slug}
+								aria-pressed="false"
+							>
+								{cat.label}
+							</button>
+						))
+					}
+				</div>
+			</div>
+
+			{
+				projectsWithCats.length > 0 ? (
+					<>
+						<div class="st-projects-grid" data-projects-grid>
+							{projectsWithCats.map(({ project, categories }) => (
+								<div class="st-projects-grid__item" data-project-item={categories.map((c) => c.slug).join(" ")}>
+									<ProjectCard
+										project={project}
+										categories={categories}
+										headingLevel={3}
+									/>
+								</div>
+							))}
+						</div>
+						<div class="st-projects-band__more">
+							<a href="/projects" class="st-btn">
+								View Full Portfolio ({projectsWithCats.length} Projects)
 							</a>
+						</div>
+					</>
+				) : (
+					<p class="st-projects-empty">No projects published yet.</p>
+				)
+			}
+		</div>
+	</section>
+
+	<!-- 5. Why Choose Structure + Stats Counters -->
+	<section class="band section st-why st-defer-section" aria-labelledby="why-choose-heading">
+		<div class="frame st-why__grid">
+			<div class="st-why__media">
+				<img
+					src="/images/structure/why-choose-us.webp"
+					alt="Structure site engineers reviewing structural plans"
+					width="600"
+					height="460"
+					loading="lazy"
+					decoding="async"
+					class="st-why__img"
+				/>
+				<div class="st-why__stamp">
+					<strong>18+</strong>
+					<span>Years of Zero-Default Turnkey Delivery</span>
+				</div>
+			</div>
+
+			<div class="st-why__content">
+				<p class="st-kicker">Why Choose Structure</p>
+				<h2 id="why-choose-heading" class="st-heading">
+					Leading in Building & Civil Construction
+				</h2>
+				<p class="st-why__lead">
+					We combine big-contractor structural muscle with boutique engineering
+					accountability—aligning architects, estimators, and field crews from
+					feasibility through 10-year warranty support.
+				</p>
+
+				<div class="st-why__features">
+					<div class="st-why__item">
+						<span class="st-why__num" aria-hidden="true">01</span>
+						<div>
+							<h3>Guaranteed Maximum Price</h3>
+							<p>
+								Open-book cost modeling locks your capital cap at 60% design,
+								preventing surprise mid-build change orders.
+							</p>
+						</div>
+					</div>
+					<div class="st-why__item">
+						<span class="st-why__num" aria-hidden="true">02</span>
+						<div>
+							<h3>5D BIM Clash Detection</h3>
+							<p>
+								Mechanical, plumbing, and structural steel conflicts are solved
+								in digital twin simulations before concrete is poured.
+							</p>
+						</div>
+					</div>
+					<div class="st-why__item">
+						<span class="st-why__num" aria-hidden="true">03</span>
+						<div>
+							<h3>ISO 9001 & OSHA Gold Safety</h3>
+							<p>
+								Daily inspection test plans, cylinder strength sensors, and
+								strict zero-harm site protocols on every shift.
+							</p>
+						</div>
+					</div>
+					<div class="st-why__item">
+						<span class="st-why__num" aria-hidden="true">04</span>
+						<div>
+							<h3>Self-Performing Core Trades</h3>
+							<p>
+								In-house foundation, structural concrete, and architectural
+								finish crews protect critical-path milestones.
+							</p>
 						</div>
 					</div>
 				</div>
-			</section>
-		) : (
-			<>
-				{featuredPost && (
-					<section class="band section">
-						<div class="frame">
-							<PostCard
-								post={featuredPost}
-								tags={featuredTags}
-								variant="feature"
-								headingLevel={2}
-								priority
-							/>
-						</div>
-					</section>
-				)}
+			</div>
+		</div>
 
-				{gridPostsWithTags.length > 0 && (
-					<section class="band section" aria-labelledby="latest-posts">
-						<div class="frame">
-							<div class="section-head">
-								<h2 id="latest-posts" class="section-head__title">
-									Latest posts
-								</h2>
-								{hasMorePosts && (
-									<a href="/posts" class="arrow-link">
-										View all<span class="sr-only"> posts</span>
-										<svg
-											viewBox="0 0 24 24"
-											fill="none"
-											stroke="currentColor"
-											stroke-width="1.75"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											aria-hidden="true"
-										>
-											<path d="M5 12h14" />
-											<path d="m12 5 7 7-7 7" />
-										</svg>
-									</a>
-								)}
+		<div class="frame st-stats">
+			{
+				stats.map((stat) => (
+					<div class="st-stat">
+						<span class="st-stat__number">{stat.number}</span>
+						<span class="st-stat__label">{stat.label}</span>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<!-- 6. Interactive Construction Cost Calculator -->
+	<section id="home-estimator" class="band section st-estimator-band st-defer-section" aria-labelledby="estimator-heading">
+		<div class="frame">
+			<div class="st-section-header">
+				<div>
+					<p class="st-kicker">Self-Service Budget Planner</p>
+					<h2 id="estimator-heading" class="st-heading">
+						Interactive Construction Cost Calculator
+					</h2>
+				</div>
+				<a href="/cost-calculator" class="arrow-link">
+					Open Full Estimator Page
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+						<path d="M5 12h14"></path>
+						<path d="m12 5 7 7-7 7"></path>
+					</svg>
+				</a>
+			</div>
+
+			<CostCalculator compact />
+		</div>
+	</section>
+
+	<!-- 7. Client Testimonials & Partner Logos -->
+	{
+		testimonials.length > 0 && (
+			<section class="band section st-testimonials st-defer-section" aria-labelledby="testimonials-heading">
+				<div class="frame">
+					<div class="st-section-header st-section-header--center">
+						<p class="st-kicker">Verified Owner Feedback</p>
+						<h2 id="testimonials-heading" class="st-heading">
+							What Our Clients Say
+						</h2>
+					</div>
+
+					<div class="st-testimonials__grid">
+						{testimonials.map((item) => (
+							<blockquote class="st-testi-card">
+								<div class="st-testi-card__stars">
+									<span aria-hidden="true">{"★★★★★"}</span>
+									<span class="sr-only">{`${item.data.rating ?? 5} out of 5 stars`}</span>
+								</div>
+								<p class="st-testi-card__quote" {...item.edit.quote}>
+									“{item.data.quote}”
+								</p>
+								<footer class="st-testi-card__author">
+									{item.data.avatar && (
+										<div class="st-testi-card__avatar" {...item.edit.avatar}>
+											<Image
+												image={item.data.avatar}
+												width={56}
+												height={56}
+												formats={["webp"]}
+												placeholder={false}
+												sizes="56px"
+											/>
+										</div>
+									)}
+									<div>
+										<cite class="st-testi-card__name" {...item.edit.title}>
+											{item.data.title}
+										</cite>
+										{item.data.role_company && (
+											<span class="st-testi-card__role">
+												{item.data.role_company}
+											</span>
+										)}
+										{item.data.project_name && (
+											<span class="st-testi-card__project">
+												Project: {item.data.project_name}
+											</span>
+										)}
+									</div>
+								</footer>
+							</blockquote>
+						))}
+					</div>
+
+					<div class="st-partners">
+						{partnerLogos.map((logo) => (
+							<div class="st-partners__item">
+								<img
+									src={logo.src}
+									alt={logo.alt}
+									width="170"
+									height="90"
+									loading="lazy"
+									decoding="async"
+								/>
 							</div>
-							<div class="post-grid">
-								{gridPostsWithTags.map(({ post, tags }) => (
-									<PostCard
-										post={post}
-										tags={tags}
-										variant="card"
-										headingLevel={3}
-									/>
-								))}
-							</div>
+						))}
+					</div>
+				</div>
+			</section>
+		)
+	}
+
+	<!-- 8. Latest Construction News & Insights -->
+	{
+		postsWithTags.length > 0 && (
+			<section class="band section st-defer-section" aria-labelledby="latest-news-heading">
+				<div class="frame">
+					<div class="st-section-header">
+						<div>
+							<p class="st-kicker">Field Notes & Insights</p>
+							<h2 id="latest-news-heading" class="st-heading">Latest News</h2>
 						</div>
-					</section>
-				)}
-			</>
+						<a href="/posts" class="arrow-link">
+							View All Articles
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+								<path d="M5 12h14"></path>
+								<path d="m12 5 7 7-7 7"></path>
+							</svg>
+						</a>
+					</div>
+
+					<div class="post-grid">
+						{postsWithTags.map(({ post, tags }) => (
+							<PostCard
+								post={post}
+								tags={tags}
+								variant="card"
+								headingLevel={3}
+							/>
+						))}
+					</div>
+				</div>
+			</section>
 		)
 	}
 </Base>
 
+<script>
+	// Hero Carousel Logic
+	const hero = document.querySelector<HTMLElement>("[data-hero-carousel]");
+	if (hero) {
+		const slides = [
+			...hero.querySelectorAll<HTMLElement>("[data-hero-slide]"),
+		];
+		const dots = [
+			...hero.querySelectorAll<HTMLButtonElement>("[data-hero-dot]"),
+		];
+		const prevBtn = hero.querySelector<HTMLButtonElement>("[data-hero-prev]");
+		const nextBtn = hero.querySelector<HTMLButtonElement>("[data-hero-next]");
+		let active = 0;
+		let timer: number | undefined;
+
+		const hydrateSlideMedia = (slide: HTMLElement | undefined) => {
+			if (!slide) return;
+			const img = slide.querySelector<HTMLImageElement>("img[data-src]");
+			if (!img) return;
+			if (img.dataset.srcset) {
+				img.srcset = img.dataset.srcset;
+				delete img.dataset.srcset;
+			}
+			if (img.dataset.src) {
+				img.src = img.dataset.src;
+				delete img.dataset.src;
+			}
+		};
+
+		const goTo = (index: number) => {
+			active = (index + slides.length) % slides.length;
+			hydrateSlideMedia(slides[active]);
+			slides.forEach((slide, i) => {
+				const isCurrent = i === active;
+				slide.classList.toggle("is-active", isCurrent);
+				slide.setAttribute("aria-hidden", String(!isCurrent));
+			});
+			dots.forEach((dot, i) => {
+				const isCurrent = i === active;
+				dot.classList.toggle("is-active", isCurrent);
+				if (isCurrent) {
+					dot.setAttribute("aria-current", "true");
+				} else {
+					dot.removeAttribute("aria-current");
+				}
+			});
+		};
+
+		const startAuto = () => {
+			if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+			stopAuto();
+			timer = window.setInterval(() => goTo(active + 1), 12000);
+		};
+
+		const stopAuto = () => {
+			if (timer) window.clearInterval(timer);
+		};
+
+		prevBtn?.addEventListener("click", () => {
+			goTo(active - 1);
+			startAuto();
+		});
+		nextBtn?.addEventListener("click", () => {
+			goTo(active + 1);
+			startAuto();
+		});
+		dots.forEach((dot, idx) => {
+			dot.addEventListener("click", () => {
+				goTo(idx);
+				startAuto();
+			});
+		});
+
+		hero.addEventListener("mouseenter", stopAuto);
+		hero.addEventListener("mouseleave", startAuto);
+		hero.addEventListener("focusin", stopAuto);
+		hero.addEventListener("focusout", startAuto);
+		startAuto();
+	}
+
+	// Project Category Filter Tabs
+	const filterRoot = document.querySelector<HTMLElement>(
+		"[data-project-filter-root]",
+	);
+	if (filterRoot) {
+		const buttons = [
+			...filterRoot.querySelectorAll<HTMLButtonElement>("[data-filter]"),
+		];
+		const items = [
+			...filterRoot.querySelectorAll<HTMLElement>("[data-project-item]"),
+		];
+
+		buttons.forEach((btn) => {
+			btn.addEventListener("click", () => {
+				const slug = btn.dataset.filter || "all";
+				buttons.forEach((b) => {
+					const isSelected = b === btn;
+					b.classList.toggle("is-active", isSelected);
+					b.setAttribute("aria-pressed", String(isSelected));
+				});
+				items.forEach((item) => {
+					const cats = (item.dataset.projectItem || "").split(/\s+/);
+					const show = slug === "all" || cats.includes(slug);
+					item.hidden = !show;
+				});
+			});
+		});
+	}
+</script>
+
 <style>
-	.home-intro {
+	/* Hero Carousel */
+	.st-hero {
+		position: relative;
+		background: var(--st-navy-deep);
+		color: #ffffff;
+		overflow: hidden;
+	}
+
+	.st-hero__slides {
 		display: grid;
-		grid-template-columns: minmax(0, 1fr) auto;
-		align-items: end;
-		gap: var(--spacing-6) var(--spacing-8);
 	}
 
-	/* Lifts the pill from the line box's bottom onto the last line's baseline */
-	.home-intro__rss {
-		margin-block-end: var(--spacing-2);
+	.st-hero__slide {
+		grid-area: 1 / 1;
+		position: relative;
+		display: none;
+		align-items: center;
+		min-block-size: clamp(460px, 62dvh, 660px);
+		padding-block: 4.5rem 5.5rem;
 	}
 
-	@media (max-width: 720px) {
-		.home-intro {
+	.st-hero__slide.is-active {
+		display: flex;
+		z-index: 1;
+	}
+
+	.st-hero__bg {
+		position: absolute;
+		inset: 0;
+		inline-size: 100%;
+		block-size: 100%;
+		max-inline-size: none;
+		object-fit: cover;
+		object-position: center;
+	}
+
+	.st-hero__overlay {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(
+			95deg,
+			rgb(14 20 32 / 0.9) 0%,
+			rgb(27 39 61 / 0.72) 58%,
+			rgb(14 20 32 / 0.55) 100%
+		);
+	}
+
+	.st-hero__content {
+		position: relative;
+		z-index: 2;
+		max-inline-size: 52rem;
+		margin-inline-start: max(0px, calc((100% - var(--frame-width)) / 2));
+	}
+
+	.st-hero__kicker {
+		display: inline-block;
+		padding: 0.35rem 0.85rem;
+		margin-block-end: 1.1rem;
+		background: rgb(255 182 0 / 0.16);
+		border-inline-start: 4px solid var(--st-yellow);
+		font-family: var(--font-heading);
+		font-size: 0.8rem;
+		font-weight: 700;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--st-yellow);
+	}
+
+	.st-hero__title {
+		font-family: var(--font-heading);
+		font-size: clamp(2rem, 1.4rem + 3vw, 3.75rem);
+		font-weight: 800;
+		line-height: 1.08;
+		letter-spacing: 0.03em;
+		text-transform: uppercase;
+		color: #ffffff;
+	}
+
+	.st-hero__lead {
+		margin-block-start: 1.25rem;
+		max-inline-size: 56ch;
+		font-size: clamp(1rem, 0.95rem + 0.3vw, 1.175rem);
+		line-height: 1.65;
+		color: #dce4f0;
+	}
+
+	.st-hero__actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.9rem;
+		margin-block-start: 2rem;
+	}
+
+	.st-hero__controls {
+		position: absolute;
+		inset-block-end: 1.5rem;
+		inset-inline: 0;
+		z-index: 3;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		pointer-events: none;
+	}
+
+	.st-hero__dots,
+	.st-hero__arrows {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		pointer-events: auto;
+	}
+
+	.st-hero__dot {
+		position: relative;
+		display: grid;
+		place-items: center;
+		inline-size: 36px;
+		block-size: 28px;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		cursor: pointer;
+		transition: inline-size var(--transition-fast);
+	}
+
+	.st-hero__dot::before {
+		content: "";
+		display: block;
+		inline-size: 100%;
+		block-size: 5px;
+		background: rgb(255 255 255 / 0.38);
+		transition: background-color var(--transition-fast);
+	}
+
+	.st-hero__dot.is-active {
+		inline-size: 52px;
+	}
+
+	.st-hero__dot.is-active::before {
+		background: var(--st-yellow);
+	}
+
+	.st-hero__arrow {
+		display: grid;
+		place-items: center;
+		inline-size: 2.5rem;
+		block-size: 2.5rem;
+		border: 1px solid rgb(255 255 255 / 0.28);
+		border-radius: var(--radius-sm);
+		background: rgb(18 27 43 / 0.72);
+		color: #ffffff;
+		cursor: pointer;
+		transition:
+			background-color var(--transition-fast),
+			border-color var(--transition-fast),
+			color var(--transition-fast);
+	}
+
+	.st-hero__arrow:hover {
+		background: var(--st-yellow);
+		border-color: var(--st-yellow);
+		color: #111111;
+	}
+
+	.st-hero__arrow svg {
+		inline-size: 18px;
+		block-size: 18px;
+	}
+
+	/* Grids */
+	.st-grid-3 {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+		gap: var(--spacing-6);
+	}
+
+	/* Projects Band */
+	.st-projects-band {
+		position: relative;
+		z-index: 1;
+		background-color: var(--st-navy-deep);
+		color: #ffffff;
+		contain-intrinsic-block-size: auto 1180px;
+	}
+
+	.st-filter-tabs {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.45rem;
+	}
+
+	.st-filter-btn {
+		padding: 0.5rem 0.95rem;
+		border: 1px solid rgb(255 255 255 / 0.18);
+		border-radius: var(--radius-sm);
+		background: transparent;
+		color: #d0d8e8;
+		font-family: var(--font-heading);
+		font-size: 0.75rem;
+		font-weight: 700;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		cursor: pointer;
+		transition:
+			background-color var(--transition-fast),
+			border-color var(--transition-fast),
+			color var(--transition-fast);
+	}
+
+	.st-filter-btn:hover,
+	.st-filter-btn.is-active {
+		background: var(--st-yellow);
+		border-color: var(--st-yellow);
+		color: #111111;
+	}
+
+	.st-projects-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+		gap: var(--spacing-5);
+	}
+
+	.st-projects-grid__item[hidden] {
+		display: none;
+	}
+
+	.st-projects-band__more {
+		margin-block-start: var(--spacing-10);
+		text-align: center;
+	}
+
+	/* Why Choose Structure */
+	.st-why__grid {
+		display: grid;
+		grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.25fr);
+		align-items: center;
+		gap: clamp(2rem, 1.5rem + 3vw, 4rem);
+	}
+
+	.st-why__media {
+		position: relative;
+	}
+
+	.st-why__img {
+		inline-size: 100%;
+		border-radius: var(--radius);
+		box-shadow: var(--shadow-card);
+		border-block-end: 5px solid var(--st-yellow);
+	}
+
+	.st-why__stamp {
+		position: absolute;
+		inset-block-end: 1.25rem;
+		inset-inline-end: 1.25rem;
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		max-inline-size: 250px;
+		padding: 1rem 1.15rem;
+		background: var(--st-navy);
+		color: #ffffff;
+		border-inline-start: 4px solid var(--st-yellow);
+		box-shadow: var(--shadow-lg);
+	}
+
+	.st-why__stamp strong {
+		font-family: var(--font-heading);
+		font-size: 2rem;
+		font-weight: 800;
+		line-height: 1;
+		color: var(--st-yellow);
+	}
+
+	.st-why__stamp span {
+		font-size: 0.8rem;
+		line-height: 1.35;
+		color: #dbe3f0;
+	}
+
+	.st-why__lead {
+		font-size: 1.05rem;
+		line-height: 1.65;
+		color: var(--color-text-secondary);
+		margin-block-end: 1.75rem;
+	}
+
+	.st-why__features {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 1.35rem;
+	}
+
+	.st-why__item {
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr);
+		gap: 0.85rem;
+	}
+
+	.st-why__num {
+		display: grid;
+		place-items: center;
+		inline-size: 2.25rem;
+		block-size: 2.25rem;
+		background: var(--st-yellow);
+		color: #111111;
+		font-family: var(--font-heading);
+		font-size: 0.8rem;
+		font-weight: 800;
+	}
+
+	.st-why__item h3 {
+		font-size: 0.95rem;
+		text-transform: uppercase;
+		margin-block-end: 0.3rem;
+	}
+
+	.st-why__item p {
+		font-size: 0.875rem;
+		line-height: 1.55;
+		color: var(--color-text-secondary);
+	}
+
+	.st-stats {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 1px;
+		margin-block-start: var(--spacing-12);
+		background: rgb(255 255 255 / 0.12);
+		border-block-start: 4px solid var(--st-yellow);
+		border-radius: var(--radius);
+		overflow: hidden;
+	}
+
+	.st-stat {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		padding: 1.85rem 1.25rem;
+		background: var(--st-navy);
+		color: #ffffff;
+	}
+
+	.st-stat__number {
+		font-family: var(--font-heading);
+		font-size: clamp(1.85rem, 1.5rem + 1.2vw, 2.6rem);
+		font-weight: 800;
+		line-height: 1;
+		color: var(--st-yellow);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.st-stat__label {
+		margin-block-start: 0.5rem;
+		font-family: var(--font-heading);
+		font-size: 0.75rem;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: #d4dce9;
+	}
+
+	/* Estimator Band */
+	.st-estimator-band {
+		background: var(--color-bg-subtle);
+	}
+
+	/* Testimonials & Partners */
+	.st-testimonials__grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--spacing-6);
+	}
+
+	.st-testi-card {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		padding: 1.75rem;
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-inline-start: 4px solid var(--st-yellow);
+		border-radius: var(--radius);
+		box-shadow: var(--shadow-sm);
+	}
+
+	.st-testi-card__stars {
+		color: var(--st-yellow);
+		letter-spacing: 0.12em;
+		font-size: 0.95rem;
+	}
+
+	.st-testi-card__quote {
+		font-size: 0.98rem;
+		line-height: 1.65;
+		color: var(--color-text);
+		font-style: italic;
+	}
+
+	.st-testi-card__author {
+		display: flex;
+		align-items: center;
+		gap: 0.9rem;
+		margin-block-start: auto;
+		padding-block-start: 0.75rem;
+		border-block-start: 1px solid var(--color-border-subtle);
+	}
+
+	.st-testi-card__avatar {
+		inline-size: 52px;
+		block-size: 52px;
+		border-radius: 50%;
+		overflow: hidden;
+		flex-shrink: 0;
+		border: 2px solid var(--st-yellow);
+	}
+
+	.st-testi-card__avatar :global(img) {
+		inline-size: 100%;
+		block-size: 100%;
+		object-fit: cover;
+	}
+
+	.st-testi-card__name {
+		display: block;
+		font-family: var(--font-heading);
+		font-style: normal;
+		font-size: 0.92rem;
+		font-weight: 800;
+		text-transform: uppercase;
+		color: var(--color-text);
+	}
+
+	.st-testi-card__role {
+		display: block;
+		font-size: 0.8rem;
+		color: var(--color-muted);
+	}
+
+	.st-testi-card__project {
+		display: inline-block;
+		margin-block-start: 2px;
+		font-family: var(--font-mono);
+		font-size: 0.72rem;
+		color: light-dark(#785000, #ffb600);
+	}
+
+	.st-partners {
+		display: grid;
+		grid-template-columns: repeat(6, minmax(0, 1fr));
+		align-items: center;
+		gap: var(--spacing-4);
+		margin-block-start: var(--spacing-12);
+		padding-block-start: var(--spacing-8);
+		border-block-start: 1px solid var(--color-border);
+	}
+
+	.st-partners__item {
+		display: grid;
+		place-items: center;
+		padding: 0.75rem 1rem;
+		background: #ffffff;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-sm);
+		opacity: 0.85;
+		transition: opacity var(--transition-fast);
+	}
+
+	.st-partners__item:hover {
+		opacity: 1;
+	}
+
+	.st-partners__item img {
+		max-block-size: 52px;
+		inline-size: auto;
+		object-fit: contain;
+	}
+
+	@media (max-width: 960px) {
+		.st-why__grid {
 			grid-template-columns: minmax(0, 1fr);
 		}
 
-		.home-intro__rss {
-			justify-self: start;
-			margin-block-end: 0;
+		.st-stats {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.st-partners {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 720px) {
+		.st-why__features,
+		.st-testimonials__grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.st-partners {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
 	}
 </style>

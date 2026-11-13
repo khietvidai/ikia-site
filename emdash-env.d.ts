@@ -10,6 +10,8 @@ export interface Page {
   slug: string | null;
   status: string;
   title: string;
+  subtitle?: string;
+  featured_image?: { id: string; src?: string; alt?: string; caption?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; caption?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
   content?: PortableTextBlock[];
   createdAt: Date;
   updatedAt: Date;
@@ -24,9 +26,69 @@ export interface Post {
   slug: string | null;
   status: string;
   title: string;
-  featured_image?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
-  content?: PortableTextBlock[];
+  featured_image?: { id: string; src?: string; alt?: string; caption?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; caption?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
   excerpt?: string;
+  content?: PortableTextBlock[];
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date | null;
+  byline?: BylineSummary | null;
+  bylines?: ContentBylineCredit[];
+  terms?: Record<string, TaxonomyTerm[]>;
+}
+
+export interface Project {
+  id: string;
+  slug: string | null;
+  status: string;
+  title: string;
+  featured_image?: { id: string; src?: string; alt?: string; caption?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; caption?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
+  excerpt?: string;
+  client?: string;
+  location?: string;
+  surface_area?: string;
+  year_completed?: string;
+  project_value?: string;
+  architect?: string;
+  content?: PortableTextBlock[];
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date | null;
+  byline?: BylineSummary | null;
+  bylines?: ContentBylineCredit[];
+  terms?: Record<string, TaxonomyTerm[]>;
+}
+
+export interface Service {
+  id: string;
+  slug: string | null;
+  status: string;
+  title: string;
+  featured_image?: { id: string; src?: string; alt?: string; caption?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; caption?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
+  icon?: string;
+  excerpt?: string;
+  delivery_time?: string;
+  warranty?: string;
+  price_range?: string;
+  content?: PortableTextBlock[];
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date | null;
+  byline?: BylineSummary | null;
+  bylines?: ContentBylineCredit[];
+  terms?: Record<string, TaxonomyTerm[]>;
+}
+
+export interface Testimonial {
+  id: string;
+  slug: string | null;
+  status: string;
+  title: string;
+  role_company?: string;
+  avatar?: { id: string; src?: string; alt?: string; caption?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; caption?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
+  quote: string;
+  rating?: number;
+  project_name?: string;
   createdAt: Date;
   updatedAt: Date;
   publishedAt: Date | null;
@@ -39,5 +101,8 @@ declare module "emdash" {
   interface EmDashCollections {
     pages: Page;
     posts: Post;
+    projects: Project;
+    services: Service;
+    testimonials: Testimonial;
   }
 }

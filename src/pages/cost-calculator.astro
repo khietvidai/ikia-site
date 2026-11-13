@@ -1,0 +1,99 @@
+---
+import Base from "../layouts/Base.astro";
+import PageBanner from "../components/PageBanner.astro";
+import CostCalculator from "../components/CostCalculator.astro";
+---
+
+<Base
+	title="Construction Cost Calculator"
+	description="Calculate an instant turnkey construction or building renovation budget using 2026 CSI MasterFormat unit benchmarks."
+>
+	<PageBanner
+		highlight="Cost"
+		title="Calculator"
+		subtitle="Configure your building type, floor area (m²), finish specification, and engineering packages for an instant GMP ballpark."
+		backgroundImage="/images/structure/banner-services.jpg"
+		breadcrumbs={[{ label: "Cost Calculator" }]}
+	/>
+
+	<section class="band section">
+		<div class="frame">
+			<div class="st-section-header">
+				<div>
+					<p class="st-kicker">30-Second Feasibility Tool</p>
+					<h2 class="st-heading">Project Budget Estimator</h2>
+				</div>
+				<a href="/pages/pricing" class="arrow-link">
+					Compare Service Packages
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+						<path d="M5 12h14"></path>
+						<path d="m12 5 7 7-7 7"></path>
+					</svg>
+				</a>
+			</div>
+
+			<CostCalculator />
+
+			<div class="st-calc-notes">
+				<div class="st-calc-note">
+					<h3>What Is Included in Base Rates?</h3>
+					<p>
+						Site mobilization, structural frame, code-compliant envelope,
+						standard MEP rough-ins, full-time superintendent supervision, and
+						10-year structural warranty.
+					</p>
+				</div>
+				<div class="st-calc-note">
+					<h3>How Fast Can I Get an Exact GMP?</h3>
+					<p>
+						Click <strong>Lock In Official Quote</strong> above to send your
+						configured parameters to our estimating desk. We return itemized
+						takeoffs within 5 business days.
+					</p>
+				</div>
+				<div class="st-calc-note">
+					<h3>Value Engineering Guarantee</h3>
+					<p>
+						Already holding architectural drawings or a competing bid? Our PE
+						consultants routinely identify 8%–15% in constructability savings.
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+</Base>
+
+<style>
+	.st-calc-notes {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: var(--spacing-6);
+		margin-block-start: var(--spacing-10);
+	}
+
+	.st-calc-note {
+		padding: 1.5rem;
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-block-start: 3px solid var(--st-yellow);
+		border-radius: var(--radius);
+	}
+
+	.st-calc-note h3 {
+		font-size: 0.95rem;
+		text-transform: uppercase;
+		margin-block-end: 0.5rem;
+	}
+
+	.st-calc-note p {
+		font-size: 0.875rem;
+		line-height: 1.6;
+		color: var(--color-text-secondary);
+	}
+
+	@media (max-width: 860px) {
+		.st-calc-notes {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+</style>

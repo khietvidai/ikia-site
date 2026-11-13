@@ -2,21 +2,200 @@
 	"$schema": "https://emdashcms.com/seed.schema.json",
 	"version": "1",
 	"meta": {
-		"name": "Blog Starter",
-		"description": "A blog with posts and pages",
-		"author": "EmDash"
+		"name": "Structure Construction",
+		"description": "General Contracting, Civil Engineering, Architecture & Building Renovation template powered by EmDash CMS",
+		"author": "Structure Construction"
 	},
 	"settings": {
-		"title": "My Blog",
-		"tagline": "Thoughts on building for the web"
+		"title": "Structure Construction",
+		"tagline": "Leading in Building & Civil Construction",
+		"staging": false
 	},
 	"collections": [
+		{
+			"slug": "services",
+			"label": "Services",
+			"labelSingular": "Service",
+			"urlPattern": "/services/{slug}",
+			"supports": [
+				"drafts",
+				"revisions",
+				"preview",
+				"search",
+				"seo"
+			],
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string",
+					"required": true,
+					"searchable": true
+				},
+				{
+					"slug": "featured_image",
+					"label": "Featured Image",
+					"type": "image"
+				},
+				{
+					"slug": "icon",
+					"label": "Icon Key",
+					"type": "string"
+				},
+				{
+					"slug": "excerpt",
+					"label": "Excerpt",
+					"type": "text",
+					"searchable": true
+				},
+				{
+					"slug": "delivery_time",
+					"label": "Typical Timeline",
+					"type": "string"
+				},
+				{
+					"slug": "warranty",
+					"label": "Structural Warranty",
+					"type": "string"
+				},
+				{
+					"slug": "price_range",
+					"label": "Indicative Rate",
+					"type": "string"
+				},
+				{
+					"slug": "content",
+					"label": "Service Details",
+					"type": "portableText",
+					"searchable": true
+				}
+			]
+		},
+		{
+			"slug": "projects",
+			"label": "Projects",
+			"labelSingular": "Project",
+			"urlPattern": "/projects/{slug}",
+			"supports": [
+				"drafts",
+				"revisions",
+				"preview",
+				"search",
+				"seo"
+			],
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Project Title",
+					"type": "string",
+					"required": true,
+					"searchable": true
+				},
+				{
+					"slug": "featured_image",
+					"label": "Project Cover Image",
+					"type": "image"
+				},
+				{
+					"slug": "excerpt",
+					"label": "Summary",
+					"type": "text",
+					"searchable": true
+				},
+				{
+					"slug": "client",
+					"label": "Client",
+					"type": "string"
+				},
+				{
+					"slug": "location",
+					"label": "Location",
+					"type": "string"
+				},
+				{
+					"slug": "surface_area",
+					"label": "Surface Area",
+					"type": "string"
+				},
+				{
+					"slug": "year_completed",
+					"label": "Year Completed",
+					"type": "string"
+				},
+				{
+					"slug": "project_value",
+					"label": "Contract Value",
+					"type": "string"
+				},
+				{
+					"slug": "architect",
+					"label": "Lead Architect",
+					"type": "string"
+				},
+				{
+					"slug": "content",
+					"label": "Case Study",
+					"type": "portableText",
+					"searchable": true
+				}
+			]
+		},
+		{
+			"slug": "testimonials",
+			"label": "Testimonials",
+			"labelSingular": "Testimonial",
+			"supports": [
+				"drafts",
+				"revisions"
+			],
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Client Name",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "role_company",
+					"label": "Role & Company",
+					"type": "string"
+				},
+				{
+					"slug": "avatar",
+					"label": "Client Photo",
+					"type": "image"
+				},
+				{
+					"slug": "quote",
+					"label": "Testimonial Quote",
+					"type": "text",
+					"required": true
+				},
+				{
+					"slug": "rating",
+					"label": "Rating (1-5)",
+					"type": "integer"
+				},
+				{
+					"slug": "project_name",
+					"label": "Project Delivered",
+					"type": "string"
+				}
+			]
+		},
 		{
 			"slug": "posts",
 			"label": "Posts",
 			"labelSingular": "Post",
 			"urlPattern": "/posts/{slug}",
-			"supports": ["drafts", "revisions", "preview", "scheduling", "search", "seo"],
+			"supports": [
+				"drafts",
+				"revisions",
+				"preview",
+				"scheduling",
+				"search",
+				"seo"
+			],
 			"commentsEnabled": true,
 			"fields": [
 				{
@@ -32,15 +211,15 @@
 					"type": "image"
 				},
 				{
+					"slug": "excerpt",
+					"label": "Excerpt",
+					"type": "text"
+				},
+				{
 					"slug": "content",
 					"label": "Content",
 					"type": "portableText",
 					"searchable": true
-				},
-				{
-					"slug": "excerpt",
-					"label": "Excerpt",
-					"type": "text"
 				}
 			]
 		},
@@ -49,7 +228,13 @@
 			"label": "Pages",
 			"labelSingular": "Page",
 			"urlPattern": "/pages/{slug}",
-			"supports": ["drafts", "revisions", "preview", "search", "seo"],
+			"supports": [
+				"drafts",
+				"revisions",
+				"preview",
+				"search",
+				"seo"
+			],
 			"fields": [
 				{
 					"slug": "title",
@@ -57,6 +242,16 @@
 					"type": "string",
 					"required": true,
 					"searchable": true
+				},
+				{
+					"slug": "subtitle",
+					"label": "Subtitle",
+					"type": "string"
+				},
+				{
+					"slug": "featured_image",
+					"label": "Banner / Featured Image",
+					"type": "image"
 				},
 				{
 					"slug": "content",
@@ -69,23 +264,69 @@
 	],
 	"taxonomies": [
 		{
+			"name": "project_category",
+			"label": "Project Categories",
+			"labelSingular": "Project Category",
+			"hierarchical": true,
+			"collections": [
+				"projects"
+			],
+			"terms": [
+				{
+					"slug": "buildings",
+					"label": "Buildings",
+					"description": "Commercial, residential, and civil building construction projects."
+				},
+				{
+					"slug": "interior-design",
+					"label": "Interior Design",
+					"description": "Architectural interiors, fit-outs, and spatial engineering."
+				},
+				{
+					"slug": "isolation",
+					"label": "Isolation",
+					"description": "Thermal, acoustic, and high-efficiency building envelope systems."
+				},
+				{
+					"slug": "plumbing",
+					"label": "Plumbing",
+					"description": "MEP, hydronic heating, water systems, and luxury aquatic engineering."
+				},
+				{
+					"slug": "tiling",
+					"label": "Tiling",
+					"description": "Precision stone, porcelain, architectural facade, and terrace finishes."
+				}
+			]
+		},
+		{
 			"name": "category",
 			"label": "Categories",
 			"labelSingular": "Category",
 			"hierarchical": true,
-			"collections": ["posts"],
+			"collections": [
+				"posts"
+			],
 			"terms": [
 				{
-					"slug": "development",
-					"label": "Development"
+					"slug": "construction",
+					"label": "Construction",
+					"description": "Field operations, project delivery, and structural engineering insights."
 				},
 				{
-					"slug": "design",
-					"label": "Design"
+					"slug": "architecture",
+					"label": "Architecture",
+					"description": "Adaptive reuse, sustainable design, and modern building envelopes."
 				},
 				{
-					"slug": "notes",
-					"label": "Notes"
+					"slug": "interior-design",
+					"label": "Interior Design",
+					"description": "Color theory, material palettes, and interior renovation guides."
+				},
+				{
+					"slug": "engineering",
+					"label": "Engineering",
+					"description": "Engineering consulting, leadership, and career perspectives."
 				}
 			]
 		},
@@ -94,38 +335,50 @@
 			"label": "Tags",
 			"labelSingular": "Tag",
 			"hierarchical": false,
-			"collections": ["posts"],
+			"collections": [
+				"posts"
+			],
 			"terms": [
 				{
-					"slug": "webdev",
-					"label": "Web Development"
+					"slug": "builder",
+					"label": "Builder"
 				},
 				{
-					"slug": "opinion",
-					"label": "Opinion"
+					"slug": "structure",
+					"label": "Structure"
 				},
 				{
-					"slug": "tools",
-					"label": "Tools"
+					"slug": "renovation",
+					"label": "Renovation"
 				},
 				{
-					"slug": "creativity",
-					"label": "Creativity"
+					"slug": "sustainability",
+					"label": "Sustainability"
+				},
+				{
+					"slug": "consulting",
+					"label": "Consulting"
 				}
 			]
 		}
 	],
 	"bylines": [
 		{
-			"id": "byline-editorial",
-			"slug": "emdash-editorial",
-			"displayName": "EmDash Editorial"
+			"id": "byline-frankie",
+			"slug": "frankie-kao",
+			"displayName": "Frankie Kao",
+			"bio": "Managing Director & Senior Field Engineer with 18+ years leading commercial and civil construction programs."
 		},
 		{
-			"id": "byline-guest",
-			"slug": "guest-contributor",
-			"displayName": "Guest Contributor",
-			"isGuest": true
+			"id": "byline-sarah",
+			"slug": "sarah-jenkins",
+			"displayName": "Sarah Jenkins, PE",
+			"bio": "Principal Structural & MEP Consultant specializing in sustainable retrofits and design-build delivery."
+		},
+		{
+			"id": "byline-editorial",
+			"slug": "structure-editorial",
+			"displayName": "Structure Editorial"
 		}
 	],
 	"menus": [
@@ -140,13 +393,110 @@
 				},
 				{
 					"type": "custom",
-					"label": "About",
+					"label": "Projects",
+					"url": "/projects"
+				},
+				{
+					"type": "custom",
+					"label": "Our Services",
+					"url": "/services"
+				},
+				{
+					"type": "custom",
+					"label": "About Us",
 					"url": "/pages/about"
 				},
 				{
 					"type": "custom",
-					"label": "Posts",
+					"label": "Cost Calculator",
+					"url": "/cost-calculator"
+				},
+				{
+					"type": "custom",
+					"label": "News",
 					"url": "/posts"
+				},
+				{
+					"type": "custom",
+					"label": "Contact",
+					"url": "/contact"
+				}
+			]
+		},
+		{
+			"name": "footer_services",
+			"label": "Footer Services",
+			"items": [
+				{
+					"type": "custom",
+					"label": "Design & Build Package",
+					"url": "/services/design-build-package"
+				},
+				{
+					"type": "custom",
+					"label": "Building Renovation",
+					"url": "/services/building-renovation"
+				},
+				{
+					"type": "custom",
+					"label": "Project Management",
+					"url": "/services/project-management"
+				},
+				{
+					"type": "custom",
+					"label": "Construction Consulting",
+					"url": "/services/consulting"
+				},
+				{
+					"type": "custom",
+					"label": "Architecture & BIM",
+					"url": "/services/architecture"
+				},
+				{
+					"type": "custom",
+					"label": "Concrete & Structural",
+					"url": "/services/concrete-transport"
+				}
+			]
+		},
+		{
+			"name": "company",
+			"label": "Company Pages",
+			"items": [
+				{
+					"type": "custom",
+					"label": "About Structure",
+					"url": "/pages/about"
+				},
+				{
+					"type": "custom",
+					"label": "Company History",
+					"url": "/pages/company-history"
+				},
+				{
+					"type": "custom",
+					"label": "Core Values & Safety",
+					"url": "/pages/core-values"
+				},
+				{
+					"type": "custom",
+					"label": "ISO & Certifications",
+					"url": "/pages/certifications"
+				},
+				{
+					"type": "custom",
+					"label": "Leadership Team",
+					"url": "/pages/our-team"
+				},
+				{
+					"type": "custom",
+					"label": "Service Pricing",
+					"url": "/pages/pricing"
+				},
+				{
+					"type": "custom",
+					"label": "F.A.Q",
+					"url": "/pages/faq"
 				}
 			]
 		}
@@ -154,13 +504,13 @@
 	"widgetAreas": [
 		{
 			"name": "sidebar",
-			"label": "Sidebar",
-			"description": "Widget area displayed on single post pages",
+			"label": "Blog Sidebar",
+			"description": "Widget area displayed on single blog posts and news archives",
 			"widgets": [
 				{
 					"type": "component",
 					"componentId": "core:search",
-					"title": "Search"
+					"title": "Search News"
 				},
 				{
 					"type": "component",
@@ -169,13 +519,8 @@
 				},
 				{
 					"type": "component",
-					"componentId": "core:tags",
-					"title": "Tags"
-				},
-				{
-					"type": "component",
 					"componentId": "core:recent-posts",
-					"title": "Recent Posts",
+					"title": "Recent Articles",
 					"props": {
 						"count": 5,
 						"showDate": true
@@ -183,35 +528,31 @@
 				},
 				{
 					"type": "component",
-					"componentId": "core:archives",
-					"title": "Archives",
-					"props": {
-						"type": "monthly",
-						"limit": 6
-					}
+					"componentId": "core:tags",
+					"title": "Popular Tags"
 				}
 			]
 		},
 		{
 			"name": "footer",
-			"label": "Footer",
-			"description": "Widget area displayed in the site footer",
+			"label": "Footer Office Info",
+			"description": "Widget area displayed in the Structure footer",
 			"widgets": [
 				{
 					"type": "content",
-					"title": "About",
+					"title": "Certification & Safety",
 					"content": [
 						{
 							"_type": "block",
+							"_key": "k1",
 							"style": "normal",
 							"children": [
 								{
 									"_type": "span",
-									"text": "A blog about software, design, and the occasional stray thought.",
-									"_key": "k1"
+									"_key": "k2",
+									"text": "ISO 9001:2015 & OSHA Gold Certified General Contractor. Licensed across commercial, residential, and civil infrastructure sectors."
 								}
-							],
-							"_key": "k0"
+							]
 						}
 					]
 				}
@@ -220,275 +561,1294 @@
 	],
 	"sections": [
 		{
-			"slug": "newsletter-signup",
-			"title": "Newsletter Signup",
-			"description": "A call-to-action block for newsletter subscriptions",
-			"keywords": ["newsletter", "subscribe", "email", "cta"],
+			"slug": "quote-cta",
+			"title": "Request a Construction Quote",
+			"description": "Reusable call-to-action banner inviting prospective clients to request an estimate",
+			"keywords": [
+				"quote",
+				"estimate",
+				"cta",
+				"construction"
+			],
 			"source": "theme",
 			"content": [
 				{
 					"_type": "block",
+					"_key": "k3",
 					"style": "h3",
 					"children": [
 						{
 							"_type": "span",
-							"text": "Stay in the loop",
-							"_key": "k1"
+							"_key": "k4",
+							"text": "Looking for a high-quality constructor for your next project?"
 						}
-					],
-					"_key": "k0"
+					]
 				},
 				{
 					"_type": "block",
+					"_key": "k5",
 					"style": "normal",
 					"children": [
 						{
 							"_type": "span",
-							"text": "Get notified when new posts are published. No spam, unsubscribe anytime.",
-							"_key": "k3"
+							"_key": "k6",
+							"text": "Our pre-construction engineers deliver itemized quantity takeoffs, BIM clash detection, and guaranteed maximum price schedules within 5 business days."
 						}
-					],
-					"_key": "k2"
-				}
-			]
-		},
-		{
-			"slug": "about-author",
-			"title": "About the Author",
-			"description": "Brief author bio for use in posts or pages",
-			"keywords": ["author", "bio", "about"],
-			"source": "theme",
-			"content": [
-				{
-					"_type": "block",
-					"style": "normal",
-					"children": [
-						{
-							"_type": "span",
-							"text": "A software developer who writes about building things on the web. Based somewhere with good coffee and reliable internet.",
-							"_key": "k1"
-						}
-					],
-					"_key": "k0"
+					]
 				}
 			]
 		}
 	],
 	"content": {
-		"pages": [
+		"services": [
 			{
-				"id": "about",
-				"slug": "about",
+				"id": "svc-design-build",
+				"slug": "design-build-package",
 				"status": "published",
 				"data": {
-					"title": "About",
+					"title": "Design & Build Package",
+					"icon": "blueprint",
+					"featured_image": {
+						"$media": {
+							"url": "https://structure.thememove.com/wp-content/uploads/2015/03/project03.jpg",
+							"alt": "Design and Build turnkey construction site",
+							"filename": "service-design-build.jpg"
+						}
+					},
+					"excerpt": "Single-source accountability uniting architectural design, structural engineering, permitting, and turnkey construction under one guaranteed contract.",
+					"delivery_time": "6 – 18 Months",
+					"warranty": "10-Year Structural Warranty",
+					"price_range": "$1,450 – $2,400 / m²",
 					"content": [
 						{
 							"_type": "block",
+							"_key": "k7",
 							"style": "normal",
 							"children": [
 								{
 									"_type": "span",
-									"text": "A place for writing about software, design, and the occasional stray thought. No posting schedule, no newsletter funnel. Just things I wanted to write down.",
-									"_key": "k1"
+									"_key": "k8",
+									"text": "We get involved at the earliest concept stage so architectural vision, structural engineering, and real-world construction costs stay aligned from day one. By combining design and field execution under a single contract, owners eliminate finger-pointing between separate consultants and shave up to 22% off total project delivery schedules."
 								}
-							],
-							"_key": "k0"
+							]
 						},
 						{
 							"_type": "block",
+							"_key": "k9",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k10",
+									"text": "What Is Included in Our Turnkey Package"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k11",
 							"style": "normal",
 							"children": [
 								{
 									"_type": "span",
-									"text": "Built with Astro and EmDash. The source is open if you want to see how it works.",
-									"_key": "k3"
+									"_key": "k12",
+									"text": "Every Design & Build engagement starts with site feasibility, geotechnical investigation, and 3D BIM coordination before a single shovel hits the ground. Our integrated team manages municipal permitting, value engineering, long-lead material procurement, and full-time site supervision."
 								}
-							],
-							"_key": "k2"
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k13",
+							"style": "h3",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k14",
+									"text": "Early Cost Certainty & Zero Change-Order Surprises"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k15",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k16",
+									"text": "Traditional design-bid-build workflows often expose budget overruns only after architectural drawings are 100% finished. Our continuous cost-modeling locks in a Guaranteed Maximum Price (GMP) at the 60% design milestone, protecting your capital plan while preserving architectural quality."
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k17",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k18",
+									"text": "Key Deliverables"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k19",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k20",
+									"text": "Clients receive full architectural & structural blueprints, clash-free MEP models, weekly earned-value progress reports, commissioning documentation, and an as-built digital twin upon handover."
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"id": "svc-renovation",
+				"slug": "building-renovation",
+				"status": "published",
+				"data": {
+					"title": "Building Renovation",
+					"icon": "renovation",
+					"featured_image": {
+						"$media": {
+							"url": "https://structure.thememove.com/wp-content/uploads/2015/03/project05.jpg",
+							"alt": "Modern commercial and residential building renovation",
+							"filename": "service-building-renovation.jpg"
+						}
+					},
+					"excerpt": "Structural retrofits, facade modernization, seismic upgrades, and luxury interior transformations for occupied and heritage buildings.",
+					"delivery_time": "2 – 9 Months",
+					"warranty": "5-Year Workmanship & Waterproofing",
+					"price_range": "$680 – $1,350 / m²",
+					"content": [
+						{
+							"_type": "block",
+							"_key": "k21",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k22",
+									"text": "Modernizing an existing structure demands surgical precision. Whether breathing new life into a century-old masonry landmark or upgrading a commercial tower to LEED Gold energy performance, our renovation division protects structural integrity while minimizing disruption to surrounding tenants."
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k23",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k24",
+									"text": "Structural Retrofit & Envelope Modernization"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k25",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k26",
+									"text": "Before demolition begins, we perform laser point-cloud scanning and non-destructive slab radar testing to uncover hidden utilities and load paths. Our crews specialize in steel reinforcement, curtain-wall replacement, acoustic isolation, and high-efficiency HVAC/MEP retrofits."
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k27",
+							"style": "h3",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k28",
+									"text": "Phased Execution in Occupied Facilities"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k29",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k30",
+									"text": "For hospitals, offices, and retail spaces that cannot afford downtime, we engineer negative-pressure dust containment zones, off-hours noisy work windows, and strict safety barricades so daily operations continue seamlessly."
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"id": "svc-project-management",
+				"slug": "project-management",
+				"status": "published",
+				"data": {
+					"title": "Project Management",
+					"icon": "management",
+					"featured_image": {
+						"$media": {
+							"url": "https://structure.thememove.com/wp-content/uploads/2015/03/project06.jpg",
+							"alt": "Construction project managers reviewing blueprints on site",
+							"filename": "service-project-management.jpg"
+						}
+					},
+					"excerpt": "End-to-end owner's representation, critical-path scheduling, subcontractor procurement, and rigorous QA/QC safety governance.",
+					"delivery_time": "Full Project Lifecycle",
+					"warranty": "ISO 9001:2015 Certified Process",
+					"price_range": "4% – 7% of Construction Value",
+					"content": [
+						{
+							"_type": "block",
+							"_key": "k31",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k32",
+									"text": "We seek to get involved early in the planning phase so we can structure procurement packages, pre-qualify tier-one trade partners, and mitigate supply-chain bottlenecks long before mobilization."
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k33",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k34",
+									"text": "Critical-Path Control & Earned-Value Reporting"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k35",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k36",
+									"text": "Using Primavera P6 and cloud field-tracking, our Project Directors monitor daily crew productivity, concrete pour cycles, RFI turnaround times, and cash-flow drawdowns against baseline milestones."
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k37",
+							"style": "h3",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k38",
+									"text": "Zero-Incident Safety Culture"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k39",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k40",
+									"text": "Every jobsite operates under daily toolbox briefings, digital permit-to-work checklists, and independent third-party safety audits—maintaining an Experience Modification Rate (EMR) well below industry averages."
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"id": "svc-consulting",
+				"slug": "consulting",
+				"status": "published",
+				"data": {
+					"title": "Construction Consulting",
+					"icon": "consulting",
+					"featured_image": {
+						"$media": {
+							"url": "https://structure.thememove.com/wp-content/uploads/2015/03/project17.jpg",
+							"alt": "Pre-construction engineering and feasibility consulting",
+							"filename": "service-consulting.jpg"
+						}
+					},
+					"excerpt": "Feasibility studies, independent quantity surveying, value engineering, constructability reviews, and distressed-project recovery.",
+					"delivery_time": "2 – 6 Weeks",
+					"warranty": "PE-Stamped Advisory Reports",
+					"price_range": "$3,500 – $18,000 / Engagement",
+					"content": [
+						{
+							"_type": "block",
+							"_key": "k41",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k42",
+									"text": "Understanding manpower, constructability, and cash-flow dynamics determines the success or failure of capital projects before contracts are signed. Our senior estimators and licensed engineers act as your independent technical shield."
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k43",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k44",
+									"text": "Constructability & Value Engineering Audits"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k45",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k46",
+									"text": "We audit third-party architectural and structural packages line by line to eliminate redundant tolerances, over-specified assemblies, and sequence clashes—routinely unlocking 8% to 15% in hard-cost savings without sacrificing aesthetics or durability."
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"id": "svc-architecture",
+				"slug": "architecture",
+				"status": "published",
+				"data": {
+					"title": "Architecture & Sustainable Design",
+					"icon": "architecture",
+					"featured_image": {
+						"$media": {
+							"url": "https://structure.thememove.com/wp-content/uploads/2015/03/project19.jpg",
+							"alt": "Contemporary architectural facade and spatial modeling",
+							"filename": "service-architecture.jpg"
+						}
+					},
+					"excerpt": "Climate-responsive architecture, 5D BIM coordination, passive solar daylighting, and net-zero commercial & residential design.",
+					"delivery_time": "4 – 12 Weeks",
+					"warranty": "Full BIM LOD-350 Handover",
+					"price_range": "$65 – $140 / m²",
+					"content": [
+						{
+							"_type": "block",
+							"_key": "k47",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k48",
+									"text": "Great architecture balances human proportion, natural daylight, and structural honesty. Our studio pairs award-winning spatial design with practical field buildability so bold concepts translate effortlessly to steel, timber, and architectural concrete."
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k49",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k50",
+									"text": "BIM-Driven Design & Energy Modeling"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k51",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k52",
+									"text": "Every elevation and floorplate is simulated for solar heat gain, cross-ventilation, acoustic comfort, and lifecycle maintenance—lowering operational energy bills by up to 38% over conventional code baselines."
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"id": "svc-concrete",
+				"slug": "concrete-transport",
+				"status": "published",
+				"data": {
+					"title": "Concrete & Structural Works",
+					"icon": "concrete",
+					"featured_image": {
+						"$media": {
+							"url": "https://structure.thememove.com/wp-content/uploads/2015/03/photo22.jpg",
+							"alt": "Heavy structural concrete foundations and post-tensioned slabs",
+							"filename": "service-concrete-structural.jpg"
+						}
+					},
+					"excerpt": "Deep foundations, post-tensioned slabs, architectural exposed concrete, structural steel erection, and high-volume batch logistics.",
+					"delivery_time": "1 – 8 Months",
+					"warranty": "15-Year Structural Frame Guarantee",
+					"price_range": "$320 – $640 / m²",
+					"content": [
+						{
+							"_type": "block",
+							"_key": "k53",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k54",
+									"text": "From mat foundations and subterranean retaining walls to long-span post-tensioned podiums, our self-performing structural crews deliver tight laser-screed flatness tolerances and certified compressive strength on every pour."
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k55",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k56",
+									"text": "Precision Batching, Pumping & Curing"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k57",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k58",
+									"text": "Real-time thermal maturity sensors embedded inside concrete pours let our engineers verify strength gain accurately, accelerating formwork stripping safely while preventing shrinkage cracking in extreme climates."
+								}
+							]
 						}
 					]
 				}
 			}
 		],
+		"projects": [
+			{
+				"id": "proj-green-house",
+				"slug": "green-house",
+				"status": "published",
+				"data": {
+					"title": "Green House",
+					"featured_image": {
+						"$media": {
+							"url": "https://structure.thememove.com/wp-content/uploads/2015/03/iStock_000032042400_Large.jpg",
+							"alt": "Green House sustainable residence in Mountain View",
+							"filename": "project-green-house.jpg"
+						}
+					},
+					"excerpt": "Net-zero passive residence featuring triple-glazed curtain walls, cross-laminated timber framing, and high-R acoustic/thermal isolation.",
+					"client": "Hung Group",
+					"location": "Mountain View, CA 94043",
+					"surface_area": "1,280 m²",
+					"year_completed": "2024",
+					"project_value": "$1,450,000",
+					"architect": "Frankie Kao & Studio",
+					"content": [
+						{
+							"_type": "block",
+							"_key": "k59",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k60",
+									"text": "Commissioned by Hung Group in Mountain View, Green House demonstrates how residential architecture can achieve net-positive energy performance without compromising expansive indoor-outdoor California living."
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k61",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k62",
+									"text": "Project Challenge"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k63",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k64",
+									"text": "The client requested floor-to-ceiling southwest glass views facing a mature oak canopy while maintaining whisper-quiet interior acoustics (<28 dBA) and near-zero HVAC load during peak summer heatwaves."
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k65",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k66",
+									"text": "Engineering & Construction Solution"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k67",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k68",
+									"text": "Our team engineered a thermally broken steel-and-timber hybrid frame wrapped in continuous mineral-wool exterior isolation, paired with motorized architectural louvers, radiant hydronic limestone floors, and a 24 kW integrated solar roof."
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k69",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k70",
+									"text": "Delivered Outcome"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k71",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k72",
+									"text": "Handed over 3 weeks ahead of schedule with zero lost-time safety incidents, achieving LEED Platinum certification and reducing annual grid energy demand by 94%."
+								}
+							]
+						}
+					]
+				},
+				"taxonomies": {
+					"project_category": [
+						"interior-design",
+						"isolation"
+					]
+				}
+			},
+			{
+				"id": "proj-pool-luxury",
+				"slug": "pool-in-luxury-neighbourhood",
+				"status": "published",
+				"data": {
+					"title": "Pool In Luxury Neighbourhood",
+					"featured_image": {
+						"$media": {
+							"url": "https://structure.thememove.com/wp-content/uploads/2015/03/iStock_000064636455_Large.jpg",
+							"alt": "Cantilevered infinity pool and luxury villa pavilion",
+							"filename": "project-pool-luxury.jpg"
+						}
+					},
+					"excerpt": "Cantilevered infinity-edge lap pool, sunken outdoor lounge pavilion, and automated saltwater hydronic plumbing on a sloped hillside estate.",
+					"client": "Private Estate Trust",
+					"location": "Beverly Hills, CA",
+					"surface_area": "2,150 m²",
+					"year_completed": "2024",
+					"project_value": "$1,180,000",
+					"architect": "Jason & Perry",
+					"content": [
+						{
+							"_type": "block",
+							"_key": "k73",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k74",
+									"text": "Perched along a 28-degree hillside grade, this luxury residential compound required deep caisson foundations, crystalline waterproof shotcrete, and seamless architectural travertine decks."
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k75",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k76",
+									"text": "Hydraulic & Structural Highlights"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k77",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k78",
+									"text": "Working alongside architects Jason & Perry, Structure installed 14 reinforced concrete micro-piles tied into a post-tensioned grade beam, supporting a 22-meter zero-edge basin with whisper-quiet variable-speed filtration and solar-assisted water heating."
+								}
+							]
+						}
+					]
+				},
+				"taxonomies": {
+					"project_category": [
+						"buildings",
+						"isolation",
+						"plumbing"
+					]
+				}
+			},
+			{
+				"id": "proj-house-of-cards",
+				"slug": "house-of-cards",
+				"status": "published",
+				"data": {
+					"title": "House of Cards",
+					"featured_image": {
+						"$media": {
+							"url": "https://structure.thememove.com/wp-content/uploads/2015/03/istockphoto_21599648_large.jpg",
+							"alt": "House of Cards geometric commercial headquarters in Barcelona",
+							"filename": "project-house-of-cards.jpg"
+						}
+					},
+					"excerpt": "Multi-tiered cantilevered concrete and porcelain-clad mixed-use complex engineered for coastal wind loads and Mediterranean solar control.",
+					"client": "Awesome Company",
+					"location": "Barcelona, Spain",
+					"surface_area": "45,000 m²",
+					"year_completed": "2023",
+					"project_value": "$9,800,000",
+					"architect": "John Doe",
+					"content": [
+						{
+							"_type": "block",
+							"_key": "k79",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k80",
+									"text": "House of Cards takes its name from its dramatic interlocking cantilevered floorplates that create self-shading terraces across six commercial levels in Barcelona's innovation district."
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k81",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k82",
+									"text": "Precision Formwork & Large-Format Tiling"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k83",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k84",
+									"text": "Over 18,000 square meters of ventilated large-format sintered stone tiling and concealed rainwater drainage plumbing were installed to laser-guided tolerances, delivering a crisp geometric silhouette that stays cool year-round."
+								}
+							]
+						}
+					]
+				},
+				"taxonomies": {
+					"project_category": [
+						"buildings",
+						"plumbing",
+						"tiling"
+					]
+				}
+			},
+			{
+				"id": "proj-green-school",
+				"slug": "green-school",
+				"status": "published",
+				"data": {
+					"title": "Green School",
+					"featured_image": {
+						"$media": {
+							"url": "https://structure.thememove.com/wp-content/uploads/2015/03/istockphoto_17523243_large.jpg",
+							"alt": "Green School daylight-filled educational campus",
+							"filename": "project-green-school.jpg"
+						}
+					},
+					"excerpt": "Daylight-optimized STEM educational campus featuring acoustic classroom isolation, greywater harvesting, and non-toxic interior finishes.",
+					"client": "Awesome Company",
+					"location": "Barcelona, Spain",
+					"surface_area": "4,500 m²",
+					"year_completed": "2024",
+					"project_value": "$3,650,000",
+					"architect": "John Doe",
+					"content": [
+						{
+							"_type": "block",
+							"_key": "k85",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k86",
+									"text": "Designed to nurture student concentration and healthy indoor air quality, Green School integrates clerestory daylighting, acoustic timber baffles, and 100% rainwater-fed landscape irrigation."
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k87",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k88",
+									"text": "Fast-Track Summer Window Execution"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k89",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k90",
+									"text": "To avoid disrupting the academic calendar, pre-fabricated wall panels and modular MEP racks were assembled off-site and craned into position within a strict 14-week structural window."
+								}
+							]
+						}
+					]
+				},
+				"taxonomies": {
+					"project_category": [
+						"interior-design",
+						"isolation",
+						"plumbing"
+					]
+				}
+			},
+			{
+				"id": "proj-palms",
+				"slug": "house-under-the-palms",
+				"status": "published",
+				"data": {
+					"title": "House Under The Palms",
+					"featured_image": {
+						"$media": {
+							"url": "https://structure.thememove.com/wp-content/uploads/2015/03/project02.jpg",
+							"alt": "House Under The Palms coastal villa",
+							"filename": "project-house-under-the-palms.jpg"
+						}
+					},
+					"excerpt": "Coastal Mediterranean residence combining marine-grade concrete durability, breathable thermal render, and handcrafted artisan stone tiling.",
+					"client": "Awesome Company",
+					"location": "Barcelona, Spain",
+					"surface_area": "450 m²",
+					"year_completed": "2023",
+					"project_value": "$700,000",
+					"architect": "John Doe",
+					"content": [
+						{
+							"_type": "block",
+							"_key": "k91",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k92",
+									"text": "Exposed to salt-laden coastal breezes, House Under The Palms was built with sulfate-resistant concrete, duplex stainless-steel fixings, and seamless indoor-to-terrace basalt stone tiling."
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k93",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k94",
+									"text": "Craftsmanship & Microclimate Comfort"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k95",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k96",
+									"text": "Deep overhanging eaves and cross-ventilated courtyards keep interior living spaces naturally cool, cutting mechanical air-conditioning runtime in half."
+								}
+							]
+						}
+					]
+				},
+				"taxonomies": {
+					"project_category": [
+						"buildings",
+						"isolation",
+						"tiling"
+					]
+				}
+			},
+			{
+				"id": "proj-contemporary-villa",
+				"slug": "contemporary-villa",
+				"status": "published",
+				"data": {
+					"title": "Contemporary Villa",
+					"featured_image": {
+						"$media": {
+							"url": "https://structure.thememove.com/wp-content/uploads/2015/03/istockphoto_21892051_large.jpg",
+							"alt": "Contemporary Villa architectural concrete and glass facade",
+							"filename": "project-contemporary-villa.jpg"
+						}
+					},
+					"excerpt": "Board-formed architectural concrete villa with a column-free 14-meter glass living pavilion and custom book-matched marble interiors.",
+					"client": "Kuler Themes",
+					"location": "Mountain View, CA 94043",
+					"surface_area": "890 m²",
+					"year_completed": "2023",
+					"project_value": "$2,500,000",
+					"architect": "Jason & Perry",
+					"content": [
+						{
+							"_type": "block",
+							"_key": "k97",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k98",
+									"text": "Understanding manpower, sequencing, and cash-flow discipline determined the flawless execution of Contemporary Villa. Every architectural concrete reveal was mocked up full-scale prior to final pouring."
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k99",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k100",
+									"text": "Column-Free Structural Engineering"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k101",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k102",
+									"text": "A concealed post-tensioned transfer beam spans 14 meters over the main living gallery, allowing motorized glass walls to pocket completely out of sight."
+								}
+							]
+						}
+					]
+				},
+				"taxonomies": {
+					"project_category": [
+						"buildings",
+						"interior-design",
+						"tiling"
+					]
+				}
+			},
+			{
+				"id": "proj-kitchen-living",
+				"slug": "kitchen-and-living-room",
+				"status": "published",
+				"data": {
+					"title": "Kitchen And Living Room",
+					"featured_image": {
+						"$media": {
+							"url": "https://structure.thememove.com/wp-content/uploads/2015/03/iStock_000045715860_Large-1.jpg",
+							"alt": "Bespoke open-concept penthouse kitchen and living room remodel",
+							"filename": "project-kitchen-living-room.jpg"
+						}
+					},
+					"excerpt": "Open-concept penthouse interior gut-renovation featuring monolithic quartzite islands, concealed linear HVAC diffusers, and Italian porcelain slabs.",
+					"client": "Awesome Company",
+					"location": "Barcelona, Spain",
+					"surface_area": "620 m²",
+					"year_completed": "2024",
+					"project_value": "$900,000",
+					"architect": "John Doe",
+					"content": [
+						{
+							"_type": "block",
+							"_key": "k103",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k104",
+									"text": "Transforming a compartmentalized apartment into a gallery-grade open living space required removing two load-bearing masonry partitions and threading flush structural steel headers inside the ceiling plenum."
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k105",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k106",
+									"text": "Millwork & Stone Precision"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k107",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k108",
+									"text": "Custom smoked-oak cabinetry, acoustic floating subfloors, and continuous vein-matched porcelain tiling create an effortless flow between culinary entertaining and lounge zones."
+								}
+							]
+						}
+					]
+				},
+				"taxonomies": {
+					"project_category": [
+						"interior-design",
+						"tiling"
+					]
+				}
+			},
+			{
+				"id": "proj-villa-rustica",
+				"slug": "villa-rustica-renovation",
+				"status": "published",
+				"data": {
+					"title": "Villa Rustica Renovation",
+					"featured_image": {
+						"$media": {
+							"url": "https://structure.thememove.com/wp-content/uploads/2015/03/iStock_000036665374_Large.jpg",
+							"alt": "Villa Rustica heritage masonry and plumbing modernization",
+							"filename": "project-villa-rustica.jpg"
+						}
+					},
+					"excerpt": "Complete structural stabilization, radiant underfloor plumbing, and historic stone restoration of a countryside estate.",
+					"client": "Rustica Hospitality Group",
+					"location": "Girona, Spain",
+					"surface_area": "1,450 m²",
+					"year_completed": "2022",
+					"project_value": "$1,100,000",
+					"architect": "Sarah Jenkins, PE",
+					"content": [
+						{
+							"_type": "block",
+							"_key": "k109",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k110",
+									"text": "Preserving original hand-dressed stone arches while bringing mechanical, electrical, and plumbing infrastructure up to modern boutique-hospitality standards was the centerpiece of Villa Rustica."
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k111",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k112",
+									"text": "Hidden Modern Infrastructure"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k113",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k114",
+									"text": "All copper manifold plumbing, heat-pump chillers, and smart lighting conduits were routed beneath breathable lime-mortar screeds—leaving 19th-century stonework untouched and authentic."
+								}
+							]
+						}
+					]
+				},
+				"taxonomies": {
+					"project_category": [
+						"plumbing"
+					]
+				}
+			}
+		],
+		"testimonials": [
+			{
+				"id": "testi-frankie",
+				"slug": "frankie-kao",
+				"status": "published",
+				"data": {
+					"title": "Frankie Kao",
+					"role_company": "CEO of ThemeMove Holdings",
+					"avatar": {
+						"$media": {
+							"url": "https://structure.thememove.com/wp-content/uploads/2015/03/team01.jpg",
+							"alt": "Frankie Kao portrait",
+							"filename": "testimonial-frankie-kao.jpg"
+						}
+					},
+					"quote": "I've been thoroughly impressed with the turnkey delivery provided by Structure Construction. Their field engineers returned every call promptly, resolved permitting hurdles ahead of schedule, and handed over our headquarters below the GMP cap.",
+					"rating": 5,
+					"project_name": "Green House Campus"
+				}
+			},
+			{
+				"id": "testi-john",
+				"slug": "john-doe",
+				"status": "published",
+				"data": {
+					"title": "John Doe",
+					"role_company": "Director of Capital Projects, ABC Corp",
+					"avatar": {
+						"$media": {
+							"url": "https://structure.thememove.com/wp-content/uploads/2015/03/team02.jpg",
+							"alt": "John Doe portrait",
+							"filename": "testimonial-john-doe.jpg"
+						}
+					},
+					"quote": "Rarely do you find a general contractor whose weekly cost reports and Primavera schedules are 100% transparent. Structure caught three major MEP clashes during pre-construction that saved us over $140,000 in rework.",
+					"rating": 5,
+					"project_name": "House of Cards Commercial Center"
+				}
+			},
+			{
+				"id": "testi-elena",
+				"slug": "elena-martinez",
+				"status": "published",
+				"data": {
+					"title": "Elena Martinez",
+					"role_company": "VP Operations, Rustica Hospitality",
+					"avatar": {
+						"$media": {
+							"url": "https://structure.thememove.com/wp-content/uploads/2015/05/t3.jpg",
+							"alt": "Elena Martinez portrait",
+							"filename": "testimonial-elena-martinez.jpg"
+						}
+					},
+					"quote": "Renovating a heritage property while keeping adjacent suites open seemed daunting until Structure stepped in. Their dust containment, acoustic discipline, and stone craftsmanship exceeded every expectation.",
+					"rating": 5,
+					"project_name": "Villa Rustica Renovation"
+				}
+			},
+			{
+				"id": "testi-david",
+				"slug": "david-thornton",
+				"status": "published",
+				"data": {
+					"title": "David Thornton",
+					"role_company": "Principal Partner, Kuler Developments",
+					"avatar": {
+						"$media": {
+							"url": "https://structure.thememove.com/wp-content/uploads/2015/05/t4.jpg",
+							"alt": "David Thornton portrait",
+							"filename": "testimonial-david-thornton.jpg"
+						}
+					},
+					"quote": "From architectural concrete mockups to final commissioning, Structure's site superintendents treated our budget and architectural tolerances as if they owned the building themselves.",
+					"rating": 5,
+					"project_name": "Contemporary Villa"
+				}
+			}
+		],
 		"posts": [
 			{
-				"id": "post-1",
-				"slug": "building-for-the-long-term",
+				"id": "post-female-engineers",
+				"slug": "female-engineers-winning-with-the-velvet-glove",
 				"status": "published",
 				"data": {
-					"title": "Building for the Long Term",
-					"excerpt": "The frameworks will change. The databases will change. What survives is the clarity of your thinking.",
+					"title": "Female Engineers – Winning with the Velvet Glove",
 					"featured_image": {
 						"$media": {
-							"url": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1200&h=800&fit=crop",
-							"alt": "Code on a monitor in a dark room",
-							"filename": "building-long-term.jpg"
+							"url": "https://structure.thememove.com/wp-content/uploads/2015/03/project01.jpg",
+							"alt": "Construction engineer inspecting structural steel on site",
+							"filename": "post-female-engineers.jpg"
 						}
 					},
+					"excerpt": "Why collaborative jobsite leadership, clear technical communication, and calm conflict resolution consistently outperform table-pounding on complex builds.",
 					"content": [
 						{
 							"_type": "block",
+							"_key": "k115",
 							"style": "normal",
 							"children": [
 								{
 									"_type": "span",
-									"text": "Every few years the industry collectively decides that everything we've been doing is wrong and there's a better way. New frameworks, new paradigms, new build tools. The churn is relentless, and if you're not careful, you spend more time migrating than building.",
-									"_key": "k1"
+									"_key": "k116",
+									"text": "Industry journals have published plenty of statistics on representation in civil and structural engineering. What deserves far more attention is how collaborative leadership styles measurably improve schedule reliability on high-pressure construction sites."
 								}
-							],
-							"_key": "k0"
+							]
 						},
 						{
 							"_type": "block",
-							"style": "normal",
-							"children": [
-								{
-									"_type": "span",
-									"text": "I've been writing software long enough to have seen several of these cycles. jQuery to Backbone to Angular to React to whatever comes next. Each transition felt urgent at the time. Looking back, the things that actually mattered were rarely about the framework.",
-									"_key": "k3"
-								}
-							],
-							"_key": "k2"
-						},
-						{
-							"_type": "block",
+							"_key": "k117",
 							"style": "h2",
 							"children": [
 								{
 									"_type": "span",
-									"text": "What survives",
-									"_key": "k5"
+									"_key": "k118",
+									"text": "Clarity Beats Confrontation in Field Coordination"
 								}
-							],
-							"_key": "k4"
+							]
 						},
 						{
 							"_type": "block",
+							"_key": "k119",
 							"style": "normal",
 							"children": [
 								{
 									"_type": "span",
-									"text": "Clean data models survive. Clear boundaries between systems survive. Good naming survives. The decision to keep things simple when you could have made them clever - that definitely survives.",
-									"_key": "k7"
+									"_key": "k120",
+									"text": "On a multi-trade jobsite with 180 subcontractors competing for crane hooks and hoist windows, aggressive confrontation slows information flow. Subcontractors hide emerging issues when they expect blame. By contrast, structured daily huddles grounded in mutual respect surface field tolerances 48 hours earlier—when fixes cost hundreds of dollars instead of tens of thousands."
 								}
-							],
-							"_key": "k6"
+							]
 						},
 						{
 							"_type": "block",
+							"_key": "k121",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k122",
+									"text": "Building High-Trust Engineering Teams"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k123",
 							"style": "normal",
 							"children": [
 								{
 									"_type": "span",
-									"text": "What doesn't survive is code that was written to impress, abstractions built for problems that never materialized, and architectures designed around a framework's opinions rather than the domain's reality.",
-									"_key": "k9"
+									"_key": "k124",
+									"text": "Contractors that pair rigorous QA/QC standards with calm, transparent problem-solving retain top superintendents longer and win repeat negotiated work from institutional owners."
 								}
-							],
-							"_key": "k8"
-						},
-						{
-							"_type": "block",
-							"style": "normal",
-							"children": [
-								{
-									"_type": "span",
-									"text": "The best code I've written is boring. It reads like prose, does one thing well, and doesn't require a PhD in category theory to understand. The worst code I've written was technically impressive at the time.",
-									"_key": "k11"
-								}
-							],
-							"_key": "k10"
+							]
 						}
 					]
 				},
 				"bylines": [
 					{
-						"byline": "byline-editorial"
-					},
-					{
-						"byline": "byline-guest",
-						"roleLabel": "Guest essay"
+						"byline": "byline-sarah"
 					}
 				],
 				"taxonomies": {
-					"category": ["development"],
-					"tag": ["opinion"]
+					"category": [
+						"engineering"
+					],
+					"tag": [
+						"structure",
+						"builder"
+					]
 				}
 			},
 			{
-				"id": "post-2",
-				"slug": "the-case-for-static",
+				"id": "post-century-church",
+				"slug": "this-century-old-church-is-now-a-cozy-home",
 				"status": "published",
 				"data": {
-					"title": "The Case for Static",
-					"excerpt": "Static sites aren't a step backwards. They're what you get when you take performance and simplicity seriously.",
+					"title": "This Century-Old Church Is Now a Cozy Home",
 					"featured_image": {
 						"$media": {
-							"url": "https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=1200&h=800&fit=crop",
-							"alt": "Laptop and coffee on a wooden table",
-							"filename": "case-for-static.jpg"
+							"url": "https://structure.thememove.com/wp-content/uploads/2015/03/project04.jpg",
+							"alt": "Adaptive reuse transformation of a historic masonry church",
+							"filename": "post-century-old-church.jpg"
 						}
 					},
+					"excerpt": "Adaptive reuse lessons from converting soaring vaulted timber trusses and historic stained-glass masonry into an energy-efficient modern residence.",
 					"content": [
 						{
 							"_type": "block",
+							"_key": "k125",
 							"style": "normal",
 							"children": [
 								{
 									"_type": "span",
-									"text": "There's a certain irony in the fact that the web started static, went dynamic, and is now swinging back toward static again. But the static sites of today aren't the hand-coded HTML pages of 1998. They're generated, optimized, and deployed to edge networks that serve them in milliseconds.",
-									"_key": "k1"
+									"_key": "k126",
+									"text": "Updating a historic building always brings hidden surprises behind every masonry pier. Converting a century-old sanctuary that was never designed for residential comfort requires balancing preservation rules with modern thermal and acoustic engineering."
 								}
-							],
-							"_key": "k0"
+							]
 						},
 						{
 							"_type": "block",
-							"style": "normal",
-							"children": [
-								{
-									"_type": "span",
-									"text": "The pitch for server-rendered everything was compelling: dynamic content, personalization, real-time data. But most sites don't need most of that most of the time. A blog post doesn't need to be rendered on every request. A product page doesn't change every second.",
-									"_key": "k3"
-								}
-							],
-							"_key": "k2"
-						},
-						{
-							"_type": "block",
+							"_key": "k127",
 							"style": "h2",
 							"children": [
 								{
 									"_type": "span",
-									"text": "The performance argument",
-									"_key": "k5"
+									"_key": "k128",
+									"text": "Insulating Soaring Volumes Without Losing Character"
 								}
-							],
-							"_key": "k4"
+							]
 						},
 						{
 							"_type": "block",
+							"_key": "k129",
 							"style": "normal",
 							"children": [
 								{
 									"_type": "span",
-									"text": "A static file served from a CDN is as fast as the web gets. No cold starts, no database queries, no server-side rendering overhead. The Time to First Byte is essentially the network latency to your nearest edge node. You can't beat physics.",
-									"_key": "k7"
+									"_key": "k130",
+									"text": "To keep the original exposed hammer-beam timber trusses visible inside, the construction team installed nail-base polyisocyanurate insulation above the roof deck and zoned radiant hydronic heating across the ground floor—keeping warmth exactly where occupants live rather than heating 11-meter ceiling peaks."
 								}
-							],
-							"_key": "k6"
-						},
-						{
-							"_type": "block",
-							"style": "normal",
-							"children": [
-								{
-									"_type": "span",
-									"text": "And when you do need dynamic behavior, you can add it surgically. An island of interactivity in a sea of static HTML. The best of both worlds, without paying the cost of either at all times.",
-									"_key": "k9"
-								}
-							],
-							"_key": "k8"
+							]
 						}
 					]
 				},
@@ -498,439 +1858,1032 @@
 					}
 				],
 				"taxonomies": {
-					"category": ["development"],
-					"tag": ["webdev", "opinion"]
+					"category": [
+						"architecture"
+					],
+					"tag": [
+						"renovation",
+						"sustainability"
+					]
 				}
 			},
 			{
-				"id": "post-3",
-				"slug": "learning-in-public",
+				"id": "post-paint-colors",
+				"slug": "8-paint-colors-that-will-make-you-rethink-white",
 				"status": "published",
 				"data": {
-					"title": "Learning in Public",
-					"excerpt": "Writing about what you're learning is the fastest way to find out what you don't actually understand.",
+					"title": "8 Paint Colors That Will Make You Rethink White",
 					"featured_image": {
 						"$media": {
-							"url": "https://images.unsplash.com/photo-1432821596592-e2c18b78144f?w=1200&h=800&fit=crop",
-							"alt": "Notebook and pen on a desk",
-							"filename": "learning-in-public.jpg"
+							"url": "https://structure.thememove.com/wp-content/uploads/2015/03/project14.jpg",
+							"alt": "Warm architectural mineral wall finishes in natural daylight",
+							"filename": "post-8-paint-colors.jpg"
+						}
+					},
+					"excerpt": "How subtle limestone, warm greige, and mineral sage undertones outperform stark gallery white under changing daylight orientations.",
+					"content": [
+						{
+							"_type": "block",
+							"_key": "k131",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k132",
+									"text": "A crisp white room looks effortless in photographs, yet stark titanium white can turn cold and clinical in north-facing spaces. Architectural colorists increasingly specify nuanced mineral neutrals with Light Reflectance Values (LRV) between 62 and 78."
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k133",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k134",
+									"text": "Testing Undertones Against Natural Orientation"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k135",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k136",
+									"text": "Always sample large 60x60 cm primed boards across morning, midday, and warm 2700K evening LED lighting before committing to whole-floor spray application. Warm travertine, pale eucalyptus, and muted putty soften sharp drywall shadow lines while making oak millwork glow."
+								}
+							]
+						}
+					]
+				},
+				"bylines": [
+					{
+						"byline": "byline-editorial"
+					}
+				],
+				"taxonomies": {
+					"category": [
+						"interior-design"
+					],
+					"tag": [
+						"renovation"
+					]
+				}
+			},
+			{
+				"id": "post-black-white",
+				"slug": "how-to-decorate-with-black-and-white",
+				"status": "published",
+				"data": {
+					"title": "How To Decorate With Black-and-White",
+					"featured_image": {
+						"$media": {
+							"url": "https://structure.thememove.com/wp-content/uploads/2015/03/photo24.jpg",
+							"alt": "Monochrome architectural interior with matte black steel framing",
+							"filename": "post-black-and-white.jpg"
+						}
+					},
+					"excerpt": "Timeless monochrome interiors rely on tactile material contrast—pairing honed stone, blackened steel mullions, and warm natural timber.",
+					"content": [
+						{
+							"_type": "block",
+							"_key": "k137",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k138",
+									"text": "The classic black-and-white palette brings architectural discipline to lobbies, kitchens, and executive suites alike. The secret to keeping monochrome spaces inviting rather than sterile lies in texture."
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k139",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k140",
+									"text": "Layering Matte Finishes & Natural Grain"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k141",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k142",
+									"text": "Combine matte powder-coated steel glazing bars, honed Carrara marble, unlacquered brass hardware, and bouclé or rift-cut oak accents so light scatters softly across every surface."
+								}
+							]
+						}
+					]
+				},
+				"bylines": [
+					{
+						"byline": "byline-editorial"
+					}
+				],
+				"taxonomies": {
+					"category": [
+						"interior-design"
+					],
+					"tag": [
+						"structure"
+					]
+				}
+			},
+			{
+				"id": "post-consulting-diff",
+				"slug": "what-makes-engineering-consulting-different",
+				"status": "published",
+				"data": {
+					"title": "What Makes Engineering Consulting Different",
+					"featured_image": {
+						"$media": {
+							"url": "https://structure.thememove.com/wp-content/uploads/2015/03/photo23.jpg",
+							"alt": "Engineering consultants reviewing structural calculations and BIM models",
+							"filename": "post-engineering-consulting.jpg"
+						}
+					},
+					"excerpt": "Inside the fast-paced world of pre-construction consulting: translating owner business cases into buildable, bankable engineering specs.",
+					"content": [
+						{
+							"_type": "block",
+							"_key": "k143",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k144",
+									"text": "Stepping into engineering consulting reveals how many pivotal project decisions happen months before a crane arrives on site. Every soil report assumption, structural grid spacing, and facade U-value ripples across millions of dollars in downstream trade bids."
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k145",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k146",
+									"text": "Bridging Financial Models and Field Physics"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k147",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k148",
+									"text": "Great consultants speak two languages fluently: finite-element structural mechanics for design teams, and internal rate of return (IRR), schedule contingency, and lifecycle OPEX for investment committees."
+								}
+							]
+						}
+					]
+				},
+				"bylines": [
+					{
+						"byline": "byline-frankie"
+					}
+				],
+				"taxonomies": {
+					"category": [
+						"engineering",
+						"construction"
+					],
+					"tag": [
+						"consulting",
+						"builder"
+					]
+				}
+			},
+			{
+				"id": "post-furniture-life",
+				"slug": "11-times-old-furniture-gained-new-life",
+				"status": "published",
+				"data": {
+					"title": "11 Times Reclaimed Timber & Fixtures Gained New Life",
+					"featured_image": {
+						"$media": {
+							"url": "https://structure.thememove.com/wp-content/uploads/2015/03/photo26.jpg",
+							"alt": "Reclaimed architectural timber joinery in a modern commercial interior",
+							"filename": "post-reclaimed-timber.jpg"
+						}
+					},
+					"excerpt": "Circular construction practices that salvage heart-pine beams, industrial cast iron, and bespoke joinery for LEED credits and unmistakable character.",
+					"content": [
+						{
+							"_type": "block",
+							"_key": "k149",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k150",
+									"text": "Demolition waste accounts for a massive share of landfill volume, yet seasoned heartwood beams and vintage architectural hardware possess density and patina that newly milled lumber cannot replicate."
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k151",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k152",
+									"text": "Deconstruction vs. Demolition"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k153",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k154",
+									"text": "By scheduling selective deconstruction during week one of a renovation, contractors salvage structural timber for reception desks, acoustic wall slats, and bespoke conference tables—earning LEED Materials & Resources points while telling the site's authentic story."
+								}
+							]
+						}
+					]
+				},
+				"bylines": [
+					{
+						"byline": "byline-editorial"
+					}
+				],
+				"taxonomies": {
+					"category": [
+						"construction"
+					],
+					"tag": [
+						"builder",
+						"sustainability",
+						"renovation"
+					]
+				}
+			},
+			{
+				"id": "post-spring-colors",
+				"slug": "4-springtime-color-schemes-to-try-at-home",
+				"status": "published",
+				"data": {
+					"title": "4 Biophilic Color Schemes for Modern Workspaces & Homes",
+					"featured_image": {
+						"$media": {
+							"url": "https://structure.thememove.com/wp-content/uploads/2015/03/photo25.jpg",
+							"alt": "Bright biophilic interior palette with terracotta and sage tones",
+							"filename": "post-biophilic-colors.jpg"
+						}
+					},
+					"excerpt": "Four architect-approved palettes inspired by terracotta clay, coastal limestone, olive foliage, and brushed bronze.",
+					"content": [
+						{
+							"_type": "block",
+							"_key": "k155",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k156",
+									"text": "Biophilic color palettes reduce visual fatigue and anchor modern glass-and-concrete interiors in nature. Whether refreshing a boutique office or staging a model residence, pairing muted botanical greens with warm mineral clays creates immediate calm."
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k157",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k158",
+									"text": "Balancing Accent Saturation: The 60-30-10 Rule"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k159",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k160",
+									"text": "Anchor 60% of wall and ceiling planes in a breathable warm neutral, dedicate 30% to natural timber or stone flooring, and reserve 10% for rich terracotta, deep navy, or brushed brass architectural accents."
+								}
+							]
+						}
+					]
+				},
+				"bylines": [
+					{
+						"byline": "byline-editorial"
+					}
+				],
+				"taxonomies": {
+					"category": [
+						"interior-design"
+					],
+					"tag": [
+						"structure",
+						"builder"
+					]
+				}
+			},
+			{
+				"id": "post-engineer-mindset",
+				"slug": "what-to-consider-before-dating-an-engineer",
+				"status": "published",
+				"data": {
+					"title": "How Structural Engineers Look at Everyday Buildings",
+					"featured_image": {
+						"$media": {
+							"url": "https://structure.thememove.com/wp-content/uploads/2015/03/project07.jpg",
+							"alt": "Architectural steel bridge and glass atrium structure",
+							"filename": "post-engineer-perspective.jpg"
+						}
+					},
+					"excerpt": "Walk into any airport terminal or historic cathedral with a structural engineer and you'll never look at columns, cantilevers, or expansion joints the same way again.",
+					"content": [
+						{
+							"_type": "block",
+							"_key": "k161",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k162",
+									"text": "Spend ten minutes walking through a new building alongside a structural engineer and you will quickly notice their eyes drift straight past the decorative chandeliers toward the ceiling connections, expansion joints, and lateral bracing."
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k163",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k164",
+									"text": "Reading Load Paths in Plain Sight"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k165",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k166",
+									"text": "Every building is a frozen diagram of gravity and wind forces finding their way safely into the earth. Appreciating how slender steel diagrids, post-tensioned slabs, and seismic dampers quietly protect occupants makes great architecture twice as inspiring."
+								}
+							]
+						}
+					]
+				},
+				"bylines": [
+					{
+						"byline": "byline-frankie"
+					}
+				],
+				"taxonomies": {
+					"category": [
+						"engineering"
+					],
+					"tag": [
+						"structure"
+					]
+				}
+			}
+		],
+		"pages": [
+			{
+				"id": "page-about",
+				"slug": "about",
+				"status": "published",
+				"data": {
+					"title": "About Structure Construction",
+					"subtitle": "18+ Years Delivering Commercial, Civil & Architectural Excellence",
+					"featured_image": {
+						"$media": {
+							"url": "https://structure.thememove.com/wp-content/uploads/2015/05/about01.jpg",
+							"alt": "Structure Construction engineering and field management team",
+							"filename": "page-about-structure.jpg"
 						}
 					},
 					"content": [
 						{
 							"_type": "block",
+							"_key": "k167",
 							"style": "normal",
 							"children": [
 								{
 									"_type": "span",
-									"text": "I started writing about things I was learning not because I had anything original to say, but because I kept forgetting what I'd figured out. The blog posts were notes to my future self, published publicly more out of laziness than courage.",
-									"_key": "k1"
+									"_key": "k168",
+									"text": "Founded on uncompromising field engineering and transparent client partnerships, Structure Construction has grown into a premier Design-Build and General Contracting firm with over 2,368 completed projects across commercial, residential, institutional, and civil infrastructure sectors."
 								}
-							],
-							"_key": "k0"
+							]
 						},
 						{
 							"_type": "block",
-							"style": "normal",
-							"children": [
-								{
-									"_type": "span",
-									"text": "What I didn't expect was how much the writing itself would accelerate the learning. There's a particular kind of clarity that comes from trying to explain something to someone else. The gaps in your understanding, which you can happily ignore when the knowledge lives only in your head, become painfully obvious when you try to put it into sentences.",
-									"_key": "k3"
-								}
-							],
-							"_key": "k2"
-						},
-						{
-							"_type": "block",
+							"_key": "k169",
 							"style": "h2",
 							"children": [
 								{
 									"_type": "span",
-									"text": "The fear of being wrong",
-									"_key": "k5"
+									"_key": "k170",
+									"text": "Our Mission & Integrated Delivery Model"
 								}
-							],
-							"_key": "k4"
+							]
 						},
 						{
 							"_type": "block",
+							"_key": "k171",
 							"style": "normal",
 							"children": [
 								{
 									"_type": "span",
-									"text": "The biggest barrier isn't time or writing skill. It's the fear of publishing something that turns out to be wrong. But here's the thing: being wrong publicly is one of the most efficient ways to learn. Someone will correct you, often kindly, and you'll remember that correction forever.",
-									"_key": "k7"
+									"_key": "k172",
+									"text": "We believe owners deserve complete certainty over schedule, safety, and capital budgets. By uniting pre-construction estimators, BIM architects, MEP coordinators, and self-performing concrete & structural crews under one roof, we turn complex blueprints into enduring landmarks."
 								}
-							],
-							"_key": "k6"
+							]
 						},
 						{
 							"_type": "block",
+							"_key": "k173",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k174",
+									"text": "Why Institutional & Private Clients Choose Structure"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k175",
 							"style": "normal",
 							"children": [
 								{
 									"_type": "span",
-									"text": "The posts that helped me most weren't written by experts. They were written by people one step ahead of me on the same path, in language that hadn't yet been polished into abstraction. There's a place for that kind of writing, and it's more valuable than most people realize.",
-									"_key": "k9"
+									"_key": "k176",
+									"text": "Every engagement is backed by open-book GMP cost tracking, Primavera critical-path governance, ISO 9001:2015 quality control checklists, and a 10-year structural warranty."
 								}
-							],
-							"_key": "k8"
+							]
 						}
 					]
-				},
-				"taxonomies": {
-					"category": ["notes"],
-					"tag": ["opinion"]
 				}
 			},
 			{
-				"id": "post-4",
-				"slug": "small-tools-big-impact",
+				"id": "page-history",
+				"slug": "company-history",
 				"status": "published",
 				"data": {
-					"title": "Small Tools, Big Impact",
-					"excerpt": "The best developer tools do one thing well and get out of your way. A love letter to focused software.",
-					"featured_image": {
-						"$media": {
-							"url": "https://images.unsplash.com/photo-1575026615908-666710ae5e47?w=1200&h=800&fit=crop",
-							"alt": "Wrenches and hand tools hanging on a workshop wall",
-							"filename": "small-tools.jpg"
-						}
-					},
+					"title": "Company History",
+					"subtitle": "From a Regional Concrete & Structural Crew to an Integrated Design-Build Leader",
 					"content": [
 						{
 							"_type": "block",
+							"_key": "k177",
 							"style": "normal",
 							"children": [
 								{
 									"_type": "span",
-									"text": "There's a class of software that doesn't get enough appreciation. Not the frameworks or the platforms or the IDEs, but the small, sharp tools that solve one problem so well you stop thinking about them. They become invisible, which is the highest compliment you can pay a tool.",
-									"_key": "k1"
+									"_key": "k178",
+									"text": "2008 — Established as a specialized structural concrete and commercial renovation contractor with 18 field engineers and craftsmen."
 								}
-							],
-							"_key": "k0"
+							]
 						},
 						{
 							"_type": "block",
+							"_key": "k179",
 							"style": "normal",
 							"children": [
 								{
 									"_type": "span",
-									"text": "I'm talking about things like ripgrep, which searches code so fast it changed how I think about searching. Or jq, which makes JSON feel like a first-class data format in the terminal. Or curl, which has been quietly powering the internet's plumbing for decades.",
-									"_key": "k3"
+									"_key": "k180",
+									"text": "2013 — Launched our in-house Pre-Construction & Design-Build division, completing our 500th commercial project."
 								}
-							],
-							"_key": "k2"
+							]
 						},
 						{
 							"_type": "block",
-							"style": "h2",
-							"children": [
-								{
-									"_type": "span",
-									"text": "The Unix philosophy, revisited",
-									"_key": "k5"
-								}
-							],
-							"_key": "k4"
-						},
-						{
-							"_type": "block",
+							"_key": "k181",
 							"style": "normal",
 							"children": [
 								{
 									"_type": "span",
-									"text": "Do one thing well. The advice is old enough to be a cliche, but the best modern tools still follow it. They don't try to be platforms. They don't have plugin ecosystems or configuration languages or startup wizards. They do their job and they compose with other tools that do theirs.",
-									"_key": "k7"
+									"_key": "k182",
+									"text": "2018 — Achieved ISO 9001:2015 Quality Management and ISO 45001 Occupational Health & Safety certifications; expanded BIM 5D digital twin workflows across all major builds."
 								}
-							],
-							"_key": "k6"
+							]
 						},
 						{
 							"_type": "block",
+							"_key": "k183",
 							"style": "normal",
 							"children": [
 								{
 									"_type": "span",
-									"text": "The temptation is always to add more. One more feature, one more option, one more integration. But every addition is a decision someone has to make, a path through the code that has to be maintained, a thing that can break. The best tools resist this. They stay small, and in staying small, they stay reliable.",
-									"_key": "k9"
+									"_key": "k184",
+									"text": "2024–Present — Surpassed 2,368 delivered projects, 999+ skilled engineers and tradespeople, and 124 national safety and architectural build awards."
 								}
-							],
-							"_key": "k8"
+							]
 						}
 					]
-				},
-				"taxonomies": {
-					"category": ["development"],
-					"tag": ["tools"]
 				}
 			},
 			{
-				"id": "post-5",
-				"slug": "designing-with-constraints",
+				"id": "page-values",
+				"slug": "core-values",
 				"status": "published",
 				"data": {
-					"title": "Designing with Constraints",
-					"excerpt": "Limitations aren't obstacles to creativity. They're the structure that makes creativity possible.",
-					"featured_image": {
-						"$media": {
-							"url": "https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?w=1200&h=800&fit=crop",
-							"alt": "Pencils and design tools on a desk",
-							"filename": "designing-with-constraints.jpg"
-						}
-					},
+					"title": "Core Values & Zero-Harm Safety",
+					"subtitle": "Safety First. Structural Integrity Always. Radical Budget Transparency.",
 					"content": [
 						{
 							"_type": "block",
-							"style": "normal",
-							"children": [
-								{
-									"_type": "span",
-									"text": "Give a designer a blank canvas and unlimited time, and they'll often produce something mediocre. Give them a tight brief, a small screen, and a deadline, and they'll surprise you. This isn't a paradox - it's how creativity actually works.",
-									"_key": "k1"
-								}
-							],
-							"_key": "k0"
-						},
-						{
-							"_type": "block",
-							"style": "normal",
-							"children": [
-								{
-									"_type": "span",
-									"text": "Constraints force decisions. When you can't use more than two typefaces, you have to choose carefully. When the page has to load in under a second, every element earns its place. When the interface has to work on a 320px screen, you discover what's truly essential.",
-									"_key": "k3"
-								}
-							],
-							"_key": "k2"
-						},
-						{
-							"_type": "block",
+							"_key": "k185",
 							"style": "h2",
 							"children": [
 								{
 									"_type": "span",
-									"text": "Embracing the box",
-									"_key": "k5"
+									"_key": "k186",
+									"text": "1. Zero-Harm Jobsite Culture"
 								}
-							],
-							"_key": "k4"
+							]
 						},
 						{
 							"_type": "block",
+							"_key": "k187",
 							"style": "normal",
 							"children": [
 								{
 									"_type": "span",
-									"text": "The web itself is a constraint. HTML flows in one direction. CSS has a box model. Browsers have viewport sizes and font rendering quirks. You can fight these constraints or you can work with them, and the results are dramatically different.",
-									"_key": "k7"
+									"_key": "k188",
+									"text": "No milestone or margin ever comes before human life. Every worker and visitor on a Structure site has stop-work authority if an unsafe condition arises."
 								}
-							],
-							"_key": "k6"
+							]
 						},
 						{
 							"_type": "block",
+							"_key": "k189",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k190",
+									"text": "2. Engineering Honesty"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k191",
 							"style": "normal",
 							"children": [
 								{
 									"_type": "span",
-									"text": "The designs I admire most don't look like they were forced through a framework. They look like they grew naturally from the medium, respecting its grain rather than working against it. That only happens when you treat constraints as creative partners rather than enemies.",
-									"_key": "k9"
+									"_key": "k192",
+									"text": "We flag constructability risks and material lead-time realities upfront during pre-construction—never hiding behind vague allowances or post-award change orders."
 								}
-							],
-							"_key": "k8"
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k193",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k194",
+									"text": "3. Craftsmanship Measured in Millimeters"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k195",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k196",
+									"text": "From laser-screeded foundation slabs to architectural stone joinery, our superintendents inspect every trade handover before follow-on work begins."
+								}
+							]
 						}
 					]
-				},
-				"taxonomies": {
-					"category": ["design"],
-					"tag": ["creativity"]
 				}
 			},
 			{
-				"id": "post-6",
-				"slug": "a-weekend-with-a-side-project",
+				"id": "page-certifications",
+				"slug": "certifications",
 				"status": "published",
 				"data": {
-					"title": "A Weekend with a Side Project",
-					"excerpt": "No stakeholders, no deadlines, no Jira tickets. Just you and a dumb idea that might turn into something.",
-					"featured_image": {
-						"$media": {
-							"url": "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=1200&h=800&fit=crop",
-							"alt": "Code on a screen with a dark theme",
-							"filename": "weekend-side-project.jpg"
-						}
-					},
+					"title": "ISO & Industry Certifications",
+					"subtitle": "Independently Audited Quality, Environmental & Safety Governance",
 					"content": [
 						{
 							"_type": "block",
+							"_key": "k197",
 							"style": "normal",
 							"children": [
 								{
 									"_type": "span",
-									"text": "Saturday morning. Coffee's made, the house is quiet, and I've got an idea that's been nagging at me all week. Not a good idea, necessarily - just a persistent one. A small tool that does a thing I keep doing manually. How hard could it be?",
-									"_key": "k1"
+									"_key": "k198",
+									"text": "Structure Construction maintains active third-party certifications across quality assurance, environmental stewardship, and occupational safety:"
 								}
-							],
-							"_key": "k0"
+							]
 						},
 						{
 							"_type": "block",
+							"_key": "k199",
+							"style": "h3",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k200",
+									"text": "ISO 9001:2015 — Quality Management System"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k201",
 							"style": "normal",
 							"children": [
 								{
 									"_type": "span",
-									"text": "This is the best kind of programming. No requirements document, no sprint planning, no pull request reviews. Just a text editor and a problem. The freedom to make terrible architectural decisions, rewrite everything twice, and follow tangents that turn out to be dead ends.",
-									"_key": "k3"
+									"_key": "k202",
+									"text": "Standardized inspection test plans (ITPs), concrete cylinder verification, and digital handover documentation across 100% of projects."
 								}
-							],
-							"_key": "k2"
+							]
 						},
 						{
 							"_type": "block",
-							"style": "h2",
+							"_key": "k203",
+							"style": "h3",
 							"children": [
 								{
 									"_type": "span",
-									"text": "Why side projects matter",
-									"_key": "k5"
+									"_key": "k204",
+									"text": "ISO 45001:2018 & OSHA Gold Safety Recognition"
 								}
-							],
-							"_key": "k4"
+							]
 						},
 						{
 							"_type": "block",
+							"_key": "k205",
 							"style": "normal",
 							"children": [
 								{
 									"_type": "span",
-									"text": "Side projects are where you learn things your day job would never teach you. Not because the problems are harder, but because you're free to take risks. Try a language you've never used. Build something without a framework. Deploy to a platform you've only read about. The stakes are zero, which makes the learning maximum.",
-									"_key": "k7"
+									"_key": "k206",
+									"text": "Rigorous daily hazard assessments, crane lift plans, and fall-protection audits maintaining an industry-leading EMR safety record."
 								}
-							],
-							"_key": "k6"
+							]
 						},
 						{
 							"_type": "block",
+							"_key": "k207",
+							"style": "h3",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k208",
+									"text": "U.S. Green Building Council — LEED Accredited Professionals"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k209",
 							"style": "normal",
 							"children": [
 								{
 									"_type": "span",
-									"text": "By Sunday evening, the thing sort of works. It's rough, the error handling is nonexistent, and the README is a single sentence. But it solves the problem I set out to solve, and I learned three things I didn't know on Friday. Not a bad weekend.",
-									"_key": "k9"
+									"_key": "k210",
+									"text": "Certified green building specialists delivering net-zero envelopes, low-VOC interiors, and construction waste diversion exceeding 85%."
 								}
-							],
-							"_key": "k8"
+							]
 						}
 					]
-				},
-				"taxonomies": {
-					"category": ["development"],
-					"tag": ["creativity"]
 				}
 			},
 			{
-				"id": "post-7",
-				"slug": "notes-on-simplicity",
+				"id": "page-team",
+				"slug": "our-team",
 				"status": "published",
 				"data": {
-					"title": "Notes on Simplicity",
-					"excerpt": "Simplicity isn't the absence of complexity. It's the result of understanding a problem well enough to solve it cleanly.",
-					"featured_image": {
-						"$media": {
-							"url": "https://images.unsplash.com/photo-1559051668-e1fa58f25786?w=1200&h=800&fit=crop",
-							"alt": "Geometric pattern carved into white paper",
-							"filename": "notes-on-simplicity.jpg"
-						}
-					},
+					"title": "Leadership Team",
+					"subtitle": "Experienced Field Engineers, Project Directors & Licensed Architects",
 					"content": [
 						{
 							"_type": "block",
+							"_key": "k211",
 							"style": "normal",
 							"children": [
 								{
 									"_type": "span",
-									"text": "Every piece of software starts simple. A few files, a clear purpose, a small surface area. Then features get added, edge cases get handled, and before long you're looking at something that requires a diagram to understand. This isn't inevitable, but it takes discipline to prevent.",
-									"_key": "k1"
+									"_key": "k212",
+									"text": "Structure consists of dedicated engineers, estimators, and site superintendents who bring decades of hands-on field leadership to every build."
 								}
-							],
-							"_key": "k0"
+							]
 						},
 						{
 							"_type": "block",
-							"style": "normal",
-							"children": [
-								{
-									"_type": "span",
-									"text": "The hard part of simplicity isn't the initial design. It's the ongoing resistance to complication. Every feature request, every bug fix, every refactor is an opportunity to add complexity. Saying no is the most important design skill, and the least celebrated.",
-									"_key": "k3"
-								}
-							],
-							"_key": "k2"
-						},
-						{
-							"_type": "block",
+							"_key": "k213",
 							"style": "h2",
 							"children": [
 								{
 									"_type": "span",
-									"text": "Removing as a feature",
-									"_key": "k5"
+									"_key": "k214",
+									"text": "Frankie Kao — Managing Director"
 								}
-							],
-							"_key": "k4"
+							]
 						},
 						{
 							"_type": "block",
+							"_key": "k215",
 							"style": "normal",
 							"children": [
 								{
 									"_type": "span",
-									"text": "The best version of a product often has fewer features than the previous one. Not because features were missing, but because someone had the courage to remove things that weren't earning their keep. Every feature has a cost - in maintenance, in cognitive load, in the weight of the interface.",
-									"_key": "k7"
+									"_key": "k216",
+									"text": "Frankie began his career as a structural field engineer on major hospital infrastructure projects before founding Structure's turnkey Design-Build practice."
 								}
-							],
-							"_key": "k6"
+							]
 						},
 						{
 							"_type": "block",
+							"_key": "k217",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k218",
+									"text": "Sarah Jenkins, PE — Head of Structural & MEP Engineering"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k219",
 							"style": "normal",
 							"children": [
 								{
 									"_type": "span",
-									"text": "Simplicity is a practice, not a destination. You never arrive at simple. You just keep asking: is this necessary? Could this be clearer? Is there a way to solve this problem by removing something instead of adding something? The answer is yes more often than you'd expect.",
-									"_key": "k9"
+									"_key": "k220",
+									"text": "Licensed Professional Engineer leading BIM clash detection, seismic retrofits, and high-performance building envelope systems."
 								}
-							],
-							"_key": "k8"
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k221",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k222",
+									"text": "Marcus Vance — Director of Field Operations"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k223",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k224",
+									"text": "Oversees 40+ site superintendents, crane logistics, self-performing concrete crews, and our company-wide Zero-Harm safety program."
+								}
+							]
 						}
 					]
-				},
-				"taxonomies": {
-					"category": ["notes"],
-					"tag": ["opinion"]
 				}
 			},
 			{
-				"id": "post-draft",
-				"slug": "work-in-progress",
-				"status": "draft",
+				"id": "page-pricing",
+				"slug": "pricing",
+				"status": "published",
 				"data": {
-					"title": "Work in Progress",
-					"excerpt": "This post is still being written.",
+					"title": "Service Packages & Indicative Rates",
+					"subtitle": "Transparent Pre-Construction, Renovation & Turnkey Build Benchmarks",
 					"content": [
 						{
 							"_type": "block",
+							"_key": "k225",
 							"style": "normal",
 							"children": [
 								{
 									"_type": "span",
-									"text": "This is a draft post that won't appear in the public listing.",
-									"_key": "k1"
+									"_key": "k226",
+									"text": "Every construction site has unique soil, structural, and finish requirements, yet clear benchmark ranges help owners plan capital confidently before commissioning detailed takeoffs."
 								}
-							],
-							"_key": "k0"
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k227",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k228",
+									"text": "Pre-Construction & Feasibility Audit — From $3,500"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k229",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k230",
+									"text": "Includes site walk-through, municipal zoning & code review, conceptual schedule, and +/-10% CSI MasterFormat cost estimate within 7 business days."
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k231",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k232",
+									"text": "Commercial & Luxury Renovation — $680 to $1,350 / m²"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k233",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k234",
+									"text": "Ideal for office fit-outs, retail flagships, seismic upgrades, and luxury residential remodels with full dust & acoustic isolation."
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k235",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k236",
+									"text": "Turnkey Design & Build (GMP) — $1,450 to $2,400 / m²"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k237",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k238",
+									"text": "Complete architectural & structural engineering, permitting, MEP systems, civil works, and 10-year structural warranty under one single-point contract."
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"id": "page-faq",
+				"slug": "faq",
+				"status": "published",
+				"data": {
+					"title": "Frequently Asked Questions",
+					"subtitle": "Answers on Contracting Models, Timelines, Permits & Warranties",
+					"content": [
+						{
+							"_type": "block",
+							"_key": "k239",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k240",
+									"text": "How accurate is your online Construction Cost Calculator?"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k241",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k242",
+									"text": "Our interactive calculator uses current regional material and labor unit rates to give you an instant ballpark range (+/-12–15%) in 30 seconds. Once you share drawings or site coordinates, our pre-construction team refines it into an itemized GMP schedule within 5 business days."
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k243",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k244",
+									"text": "Do you handle municipal building permits and inspections?"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k245",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k246",
+									"text": "Yes. Under our Design & Build and General Contracting packages, we prepare all stamped architectural/structural submissions, coordinate fire and environmental approvals, and host all municipal inspector sign-offs."
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k247",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k248",
+									"text": "How do you prevent budget overruns mid-project?"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k249",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k250",
+									"text": "We perform 3D BIM clash detection and destructive investigative openings (for renovations) prior to locking our Guaranteed Maximum Price, eliminating surprise field conflicts."
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k251",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k252",
+									"text": "Can we customize all site content and branding in EmDash Admin?"
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k253",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k254",
+									"text": "Absolutely. Every project, service, blog post, testimonial, navigation menu, and company page is managed live in EmDash CMS at /_emdash/admin."
+								}
+							]
 						}
 					]
 				}

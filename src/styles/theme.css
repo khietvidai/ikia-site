@@ -1,34 +1,319 @@
 /*
-  theme.css -- your theme overrides. This is the file to edit to
-  retheme the site.
-
-  Every design token lives in src/styles/tokens.css (colors, type
-  scale, spacing, layout, shadows) with its default value. Override any
-  of them here: declarations in this file are unlayered, so they always
-  beat the @layer base defaults in tokens.css.
-
-  Colors are defined with light-dark(). Overriding with a plain color
-  changes light and dark mode at once; use light-dark(<light>, <dark>)
-  to set different values per mode.
-
-  Set the three brand tokens together, as in the example below:
-  --color-on-brand defaults to near-black in dark mode.
-
-  Webfonts are loaded in astro.config.mjs (--font-body, --font-mono).
-  Swap the loaded font there; use overrides here for system fonts or a
-  separate heading face.
-
-  Example:
-
-  :root {
-    --color-brand: light-dark(#0f766e, #2dd4bf);
-    --color-brand-hover: light-dark(#115e59, #5eead4);
-    --color-on-brand: light-dark(#ffffff, #0a0a0a);
-    --font-heading: "Iowan Old Style", Georgia, serif;
-    --radius-lg: 18px;
-    --radius-xl: 24px;
-  }
+  theme.css — Structure Construction design system overrides & shared UI primitives.
+  Unlayered declarations override @layer base defaults in tokens.css cleanly.
 */
 
 :root {
+	/* Structure Brand Palette */
+	--st-yellow: #ffb600;
+	--st-yellow-hover: #e5a300;
+	--st-yellow-soft: light-dark(#fff7df, rgb(255 182 0 / 0.14));
+	--st-navy: #1b273d;
+	--st-navy-deep: #121b2b;
+	--st-navy-surface: #22304a;
+	--st-navy-muted: #b3bdd0;
+	--st-on-yellow: #111111;
+
+	/* Semantic overrides */
+	--color-bg: light-dark(#f8f9fb, #0e1420);
+	--color-surface: light-dark(#ffffff, #162032);
+	--color-fill: light-dark(#eef1f5, #1f2d44);
+	--color-fill-strong: light-dark(#e2e7ee, #2b3c59);
+	--color-bg-subtle: light-dark(#f2f4f7, #131c2c);
+	--color-text: light-dark(#151c28, #f3f5f8);
+	--color-text-secondary: light-dark(#3f4a5c, #c2ccde);
+	--color-muted: light-dark(#525e71, #a3b2c8);
+	--color-border: light-dark(#dfe4ec, #27364f);
+	--color-border-subtle: light-dark(#edf0f5, #1e2a3f);
+	--color-border-strong: light-dark(#c5cedb, #3c5073);
+
+	--color-brand: light-dark(#1b273d, #ffb600);
+	--color-brand-hover: light-dark(#121b2b, #ffc533);
+	--color-on-brand: light-dark(#ffffff, #111111);
+	--color-brand-ring: rgb(255 182 0 / 0.35);
+
+	/* Typography & Architectural Geometry */
+	--font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+	--font-weight-heading: 700;
+	--font-weight-display: 800;
+	--tracking-tight: -0.015em;
+	--tracking-snug: -0.01em;
+
+	--wide-width: 1240px;
+	--content-width: 740px;
+	--nav-height: 82px;
+
+	--radius-sm: 2px;
+	--radius: 3px;
+	--radius-lg: 4px;
+	--radius-xl: 4px;
+	--radius-full: 3px;
+	--card-padding: 0px;
+}
+
+@supports not (color: light-dark(#000, #fff)) {
+	:root {
+		--color-bg: #f8f9fb;
+		--color-surface: #ffffff;
+		--color-fill: #eef1f5;
+		--color-fill-strong: #e2e7ee;
+		--color-bg-subtle: #f2f4f7;
+		--color-text: #151c28;
+		--color-text-secondary: #4a5568;
+		--color-muted: #647084;
+		--color-border: #dfe4ec;
+		--color-border-subtle: #edf0f5;
+		--color-border-strong: #c5cedb;
+		--color-brand: #1b273d;
+		--color-brand-hover: #121b2b;
+		--color-on-brand: #ffffff;
+	}
+}
+
+/* Remove Blog Starter decorative rail hairlines & crosshairs for full-bleed industrial sections */
+body::before,
+.band::before,
+.band::after {
+	display: none !important;
+	content: none !important;
+}
+
+/* ==========================================================================
+   Structure Signature Typography & Section Headers
+   ========================================================================== */
+
+.st-kicker {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-family: var(--font-heading);
+	font-size: 0.75rem;
+	font-weight: 700;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: light-dark(#785000, #ffb600);
+}
+
+.st-kicker::before {
+	content: "";
+	display: inline-block;
+	inline-size: 18px;
+	block-size: 3px;
+	background: var(--st-yellow);
+	flex-shrink: 0;
+}
+
+.st-kicker--on-dark {
+	color: var(--st-yellow);
+}
+
+.st-section-header {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: var(--spacing-4) var(--spacing-8);
+	margin-block-end: var(--spacing-10);
+}
+
+.st-section-header--center {
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+}
+
+.st-heading {
+	position: relative;
+	padding-block-end: 0.85rem;
+	font-family: var(--font-heading);
+	font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.125rem);
+	font-weight: 800;
+	letter-spacing: 0.03em;
+	text-transform: uppercase;
+	color: var(--color-text);
+}
+
+.st-heading::after {
+	content: "";
+	position: absolute;
+	inset-block-end: 0;
+	inset-inline-start: 0;
+	inline-size: 56px;
+	block-size: 4px;
+	background: var(--st-yellow);
+}
+
+.st-section-header--center .st-heading::after {
+	inset-inline: 0;
+	margin-inline: auto;
+}
+
+.st-heading--on-dark {
+	color: #ffffff;
+}
+
+/* Iconic Structure Square Brackets: [ BUILDING GREAT THINGS ] */
+.st-brackets {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.45em;
+}
+
+.st-brackets::before {
+	content: "[";
+	color: var(--st-yellow);
+	font-weight: 800;
+}
+
+.st-brackets::after {
+	content: "]";
+	color: var(--st-yellow);
+	font-weight: 800;
+}
+
+/* ==========================================================================
+   Structure Industrial Buttons
+   ========================================================================== */
+
+.st-btn,
+.btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.6rem;
+	min-block-size: 2.875rem;
+	padding-block: 0.75rem;
+	padding-inline: 1.5rem;
+	border: 2px solid transparent;
+	border-radius: var(--radius-sm);
+	background: var(--st-yellow);
+	color: var(--st-on-yellow);
+	font-family: var(--font-heading);
+	font-size: 0.8125rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	text-decoration: none !important;
+	cursor: pointer;
+	transition:
+		background-color var(--transition-fast),
+		border-color var(--transition-fast),
+		color var(--transition-fast),
+		transform var(--transition-fast);
+}
+
+.st-btn:hover,
+.btn:hover {
+	background: var(--st-yellow-hover);
+	color: var(--st-on-yellow);
+}
+
+.st-btn--navy {
+	background: var(--st-navy);
+	color: #ffffff;
+}
+
+.st-btn--navy:hover {
+	background: var(--st-navy-deep);
+	color: var(--st-yellow);
+}
+
+.st-btn--outline-light {
+	background: transparent;
+	border-color: rgb(255 255 255 / 0.85);
+	color: #ffffff;
+}
+
+.st-btn--outline-light:hover {
+	background: #ffffff;
+	border-color: #ffffff;
+	color: var(--st-navy);
+}
+
+.st-btn--ghost,
+.btn--ghost {
+	background: var(--color-surface);
+	border-color: var(--color-border-strong);
+	color: var(--color-text);
+	box-shadow: none;
+}
+
+.st-btn--ghost:hover,
+.btn--ghost:hover {
+	background: var(--st-yellow);
+	border-color: var(--st-yellow);
+	color: var(--st-on-yellow);
+}
+
+.st-btn--sm,
+.btn--sm {
+	min-block-size: 2.25rem;
+	padding-block: 0.45rem;
+	padding-inline: 1rem;
+	font-size: 0.75rem;
+}
+
+/* ==========================================================================
+   Yellow CTA Quote Ribbon (Signature Structure Element)
+   ========================================================================== */
+
+.st-quote-ribbon {
+	background: var(--st-yellow);
+	color: var(--st-on-yellow);
+	padding-block: 1.65rem;
+	border-block: 1px solid rgb(0 0 0 / 0.08);
+}
+
+.st-quote-ribbon__inner {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--spacing-4) var(--spacing-8);
+}
+
+.st-quote-ribbon__title {
+	font-family: var(--font-heading);
+	font-size: clamp(1.125rem, 1rem + 0.6vw, 1.4rem);
+	font-weight: 800;
+	letter-spacing: 0.01em;
+	color: #111111;
+}
+
+.st-quote-ribbon__sub {
+	margin-block-start: 0.2rem;
+	font-size: 0.9375rem;
+	color: #262626;
+}
+
+.st-quote-ribbon__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--spacing-3);
+}
+
+/* Visually hidden helper for live regions & screen-reader labels */
+.visually-hidden:where(:not(:focus-within, :active)) {
+	position: absolute !important;
+	clip-path: inset(50%) !important;
+	overflow: hidden !important;
+	inline-size: 1px !important;
+	block-size: 1px !important;
+	margin: -1px !important;
+	padding: 0 !important;
+	border: 0 !important;
+	white-space: nowrap !important;
+}
+
+/* Solid section surface & below-the-fold layout/paint deferral */
+.band {
+	position: relative;
+	z-index: 1;
+	background-color: var(--color-bg);
+}
+
+.st-defer-section {
+	overflow: clip;
+	content-visibility: auto;
+	contain-intrinsic-block-size: auto 900px;
 }

@@ -1,0 +1,199 @@
+---
+interface BreadcrumbItem {
+	label: string;
+	href?: string;
+}
+
+interface Props {
+	title: string;
+	highlight?: string;
+	subtitle?: string | null;
+	backgroundImage?: string;
+	breadcrumbs?: BreadcrumbItem[];
+}
+
+const {
+	title,
+	highlight,
+	subtitle,
+	backgroundImage = "/images/structure/banner-services.jpg",
+	breadcrumbs = [],
+} = Astro.props;
+
+const structureBannerMatch = backgroundImage.match(
+	/^\/images\/structure\/(banner-[a-z0-9-]+)\.(?:jpg|png|webp)$/i,
+);
+const bannerStem = structureBannerMatch?.[1];
+const bannerSrc = bannerStem
+	? `/images/structure/${bannerStem}.webp`
+	: backgroundImage;
+const bannerSrcSet = bannerStem
+	? `/images/structure/${bannerStem}-640.webp 640w, /images/structure/${bannerStem}-1080.webp 1080w, /images/structure/${bannerStem}.webp 1920w`
+	: undefined;
+---
+
+<section class="st-page-banner">
+	<img
+		src={bannerSrc}
+		srcset={bannerSrcSet}
+		sizes={bannerSrcSet ? "100vw" : undefined}
+		alt=""
+		aria-hidden="true"
+		class="st-page-banner__bg"
+		width="1920"
+		height="420"
+		fetchpriority="high"
+		decoding="async"
+	/>
+	<div class="st-page-banner__overlay" aria-hidden="true"></div>
+	<div class="frame st-page-banner__inner">
+		<div class="st-page-banner__copy">
+			<h1 class="st-page-banner__title">
+				{highlight ? (
+					<>
+						<span class="st-page-banner__accent">{highlight}</span> {title}
+					</>
+				) : (
+					title
+				)}
+			</h1>
+			{subtitle && <p class="st-page-banner__subtitle">{subtitle}</p>}
+		</div>
+
+		{
+			breadcrumbs.length > 0 && (
+				<nav class="st-breadcrumbs" aria-label="Breadcrumb">
+					<ol>
+						<li>
+							<a href="/">Home</a>
+						</li>
+						{breadcrumbs.map((crumb, index) => {
+							const isLast = index === breadcrumbs.length - 1;
+							return (
+								<li>
+									{crumb.href && !isLast ? (
+										<a href={crumb.href}>{crumb.label}</a>
+									) : (
+										<span aria-current={isLast ? "page" : undefined}>
+											{crumb.label}
+										</span>
+									)}
+								</li>
+							);
+						})}
+					</ol>
+				</nav>
+			)
+		}
+	</div>
+</section>
+
+<style>
+	.st-page-banner {
+		position: relative;
+		overflow: clip;
+		background: var(--st-navy-deep);
+		color: #ffffff;
+		border-block-end: 4px solid var(--st-yellow);
+	}
+
+	.st-page-banner__bg {
+		position: absolute;
+		inset: 0;
+		inline-size: 100%;
+		block-size: 100%;
+		max-inline-size: none;
+		object-fit: cover;
+		object-position: center;
+		opacity: 0.34;
+		pointer-events: none;
+	}
+
+	.st-page-banner__overlay {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(
+			95deg,
+			rgb(18 27 43 / 0.92) 0%,
+			rgb(27 39 61 / 0.78) 60%,
+			rgb(18 27 43 / 0.88) 100%
+		);
+		pointer-events: none;
+	}
+
+	.st-page-banner__inner {
+		position: relative;
+		z-index: 1;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--spacing-5) var(--spacing-8);
+		padding-block: clamp(2.75rem, 2rem + 3vw, 4.5rem);
+	}
+
+	.st-page-banner__copy {
+		max-inline-size: 48rem;
+	}
+
+	.st-page-banner__title {
+		font-family: var(--font-heading);
+		font-size: clamp(1.75rem, 1.35rem + 1.8vw, 2.75rem);
+		font-weight: 800;
+		line-height: 1.12;
+		letter-spacing: 0.03em;
+		text-transform: uppercase;
+		color: #ffffff;
+	}
+
+	.st-page-banner__accent {
+		color: var(--st-yellow);
+	}
+
+	.st-page-banner__subtitle {
+		margin-block-start: 0.65rem;
+		font-size: var(--font-size-lg);
+		line-height: 1.5;
+		color: #d6deeb;
+		max-inline-size: 58ch;
+	}
+
+	.st-breadcrumbs ol {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.45rem;
+		list-style: none;
+		padding: 0.5rem 0.9rem;
+		border-radius: var(--radius-sm);
+		background: rgb(18 27 43 / 0.75);
+		border: 1px solid rgb(255 255 255 / 0.14);
+		font-family: var(--font-heading);
+		font-size: 0.75rem;
+		font-weight: 600;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
+
+	.st-breadcrumbs li {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.45rem;
+		color: var(--st-yellow);
+	}
+
+	.st-breadcrumbs li + li::before {
+		content: "/";
+		color: rgb(255 255 255 / 0.45);
+	}
+
+	.st-breadcrumbs a {
+		color: #e2e8f0;
+		text-decoration: none;
+	}
+
+	.st-breadcrumbs a:hover {
+		color: var(--st-yellow);
+		text-decoration: underline;
+	}
+</style>

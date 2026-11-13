@@ -1,0 +1,231 @@
+---
+import type { ContentEntry, InferCollectionData } from "emdash";
+import { Image } from "emdash/ui";
+
+interface Props {
+	project: ContentEntry<InferCollectionData<"projects">>;
+	categories?: Array<{ slug: string; label: string }>;
+	headingLevel?: 2 | 3;
+	priority?: boolean;
+}
+
+const {
+	project,
+	categories = [],
+	headingLevel = 3,
+	priority = false,
+} = Astro.props;
+
+const Heading = `h${headingLevel}` as const;
+const href = `/projects/${project.id}`;
+const title = String(project.data.title ?? "Project");
+const location = project.data.location ? String(project.data.location) : null;
+const surfaceArea = project.data.surface_area
+	? String(project.data.surface_area)
+	: null;
+const categorySlugs = categories.map((c) => c.slug).join(" ");
+---
+
+<article class="st-project-card" data-categories={categorySlugs}>
+	<div class="st-project-card__media">
+		{
+			project.data.featured_image ? (
+				<div class="st-project-card__img" {...project.edit.featured_image}>
+					<Image
+						image={project.data.featured_image}
+						width={380}
+						height={285}
+						quality={72}
+						formats={["webp"]}
+						placeholder={false}
+						sizes="(min-width: 1100px) 360px, (min-width: 680px) 45vw, 360px"
+						priority={priority}
+						decoding="async"
+					/>
+				</div>
+			) : (
+				<div class="st-project-card__fallback" />
+			)
+		}
+		{
+			categories.length > 0 && (
+				<div class="st-project-card__cats">
+					{categories.slice(0, 2).map((cat) => (
+						<a href={`/project-category/${cat.slug}`} class="st-project-card__cat">
+							{cat.label}
+						</a>
+					))}
+				</div>
+			)
+		}
+	</div>
+
+	<div class="st-project-card__body">
+		<Heading class="st-project-card__title" {...project.edit.title}>
+			<a href={href} class="st-project-card__link">{title}</a>
+		</Heading>
+
+		{
+			(location || surfaceArea) && (
+				<p class="st-project-card__meta">
+					{location && <span>{location}</span>}
+					{surfaceArea && <span>{surfaceArea}</span>}
+				</p>
+			)
+		}
+
+		<div class="st-project-card__action" aria-hidden="true">
+			<span>View Case Study</span>
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+				<path d="M5 12h14"></path>
+				<path d="m12 5 7 7-7 7"></path>
+			</svg>
+		</div>
+	</div>
+</article>
+
+<style>
+	.st-project-card {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		background: var(--st-navy);
+		color: #ffffff;
+		border-radius: var(--radius);
+		overflow: hidden;
+		box-shadow: var(--shadow-card);
+		transition:
+			transform var(--transition-base),
+			box-shadow var(--transition-base);
+	}
+
+	.st-project-card:hover {
+		transform: translateY(-4px);
+		box-shadow: var(--shadow-card-hover);
+	}
+
+	.st-project-card__media {
+		position: relative;
+		aspect-ratio: 4 / 3;
+		overflow: hidden;
+		background: var(--st-navy-deep);
+	}
+
+	.st-project-card__img {
+		inline-size: 100%;
+		block-size: 100%;
+	}
+
+	.st-project-card__img :global(img) {
+		inline-size: 100%;
+		block-size: 100%;
+		max-inline-size: none;
+		object-fit: cover;
+		transition: scale 500ms var(--ease-out);
+	}
+
+	.st-project-card:hover .st-project-card__img :global(img) {
+		scale: 1.06;
+	}
+
+	.st-project-card__fallback {
+		inline-size: 100%;
+		block-size: 100%;
+		background: var(--st-navy-deep);
+	}
+
+	.st-project-card__cats {
+		position: absolute;
+		inset-block-start: 0.85rem;
+		inset-inline-start: 0.85rem;
+		z-index: 2;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.35rem;
+	}
+
+	.st-project-card__cat {
+		padding: 3px 8px;
+		border-radius: 2px;
+		background: rgb(18 27 43 / 0.88);
+		border-inline-start: 3px solid var(--st-yellow);
+		font-family: var(--font-heading);
+		font-size: 0.68rem;
+		font-weight: 700;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: #ffffff !important;
+		text-decoration: none !important;
+	}
+
+	.st-project-card__cat:hover {
+		background: var(--st-yellow);
+		color: #111111 !important;
+	}
+
+	.st-project-card__body {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		gap: 0.45rem;
+		padding: 1.25rem 1.35rem 1.35rem;
+		border-block-start: 3px solid var(--st-yellow);
+	}
+
+	.st-project-card__title {
+		font-size: 1.08rem;
+		font-weight: 800;
+		text-transform: uppercase;
+		letter-spacing: 0.02em;
+	}
+
+	.st-project-card__link {
+		color: #ffffff !important;
+		text-decoration: none !important;
+	}
+
+	.st-project-card__link::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+	}
+
+	.st-project-card__meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.45rem;
+		font-size: 0.825rem;
+		color: var(--st-navy-muted);
+	}
+
+	.st-project-card__meta > span + span::before {
+		content: "·";
+		margin-inline-end: 0.45rem;
+		color: var(--st-yellow);
+	}
+
+	.st-project-card__action {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		margin-block-start: auto;
+		padding-block-start: 0.65rem;
+		font-family: var(--font-heading);
+		font-size: 0.75rem;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--st-yellow);
+	}
+
+	.st-project-card__action svg {
+		inline-size: 15px;
+		block-size: 15px;
+		transition: translate var(--transition-fast);
+	}
+
+	.st-project-card:hover .st-project-card__action svg {
+		translate: 4px 0;
+	}
+</style>

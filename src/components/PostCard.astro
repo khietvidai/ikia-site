@@ -46,8 +46,14 @@ const sizes = {
 				<div class="post__image" {...post.edit.featured_image}>
 					<Image
 						image={post.data.featured_image}
+						width={variant === "feature" ? 720 : 380}
+						height={variant === "feature" ? 540 : 238}
+						quality={72}
+						formats={["webp"]}
+						placeholder={false}
 						sizes={sizes}
 						priority={priority}
+						decoding="async"
 					/>
 				</div>
 			) : (
@@ -56,7 +62,7 @@ const sizes = {
 		}
 	</a>
 	<div class="post__body">
-		<a href={href} class="post__link" aria-labelledby={titleId}>
+		<div class="post__summary">
 			<span class="post__meta">
 				{
 					publishedAt && (
@@ -68,7 +74,7 @@ const sizes = {
 				<span>{readingTime}</span>
 			</span>
 			<Heading class="post__title" id={titleId} {...post.edit.title}>
-				{title}
+				<a href={href} class="post__link">{title}</a>
 			</Heading>
 			{
 				post.data.excerpt && (
@@ -95,7 +101,7 @@ const sizes = {
 					</span>
 				)
 			}
-		</a>
+		</div>
 		{
 			(bylines.length > 0 || visibleTags.length > 0) && (
 				<div class="post__footer">
@@ -200,12 +206,32 @@ const sizes = {
 		min-width: 0;
 	}
 
-	.post__link {
+	.post__summary {
 		display: flex;
 		flex-direction: column;
 		gap: var(--spacing-2);
+	}
+
+	.post__link {
 		color: inherit;
-		text-decoration: none;
+		text-decoration: inherit;
+	}
+
+	.post__link::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+	}
+
+	.post__media {
+		z-index: 2;
+	}
+
+	.post__footer :global(a),
+	.post__tags a {
+		position: relative;
+		z-index: 2;
 	}
 
 	.post__meta {
@@ -275,19 +301,26 @@ const sizes = {
 	.post--card {
 		padding: var(--card-padding);
 		border-radius: var(--radius-xl);
+		border-block-start: 3px solid transparent;
 		background: var(--color-surface);
 		box-shadow: var(--shadow-card);
+		transition:
+			box-shadow var(--transition-base),
+			border-color var(--transition-fast),
+			translate var(--transition-fast);
 	}
 
 	.post--card:has(.post__link:hover, .post__media:hover) {
+		border-block-start-color: var(--st-yellow);
 		box-shadow: var(--shadow-card-hover);
+		translate: 0 -2px;
 	}
 
 	.post--card:has(.post__link:focus-visible) {
 		outline-offset: 3px;
 	}
 
-	.post--card .post__link {
+	.post--card .post__summary {
 		padding: var(--spacing-4) var(--spacing-3) var(--spacing-4);
 	}
 
@@ -327,7 +360,7 @@ const sizes = {
 		padding: clamp(1.5rem, 1rem + 2vw, 3rem);
 	}
 
-	.post--feature .post__link {
+	.post--feature .post__summary {
 		gap: var(--spacing-4);
 	}
 

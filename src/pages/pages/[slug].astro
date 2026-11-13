@@ -1,84 +1,353 @@
 ---
 import {
 	getEmDashEntry,
+	getMenuWithCacheHint,
 	getSeoMeta,
 	decodeSlug,
 	getSiteSettings,
 } from "emdash";
-import { PortableText } from "emdash/ui";
+import { Image, PortableText } from "emdash/ui";
 import Base from "../../layouts/Base.astro";
-import { resolveBlogSiteIdentity } from "../../utils/site-identity";
+import PageBanner from "../../components/PageBanner.astro";
+import {
+	resolveBlogSiteIdentity,
+	getMediaUrl,
+	STRUCTURE_CONTACT,
+} from "../../utils/site-identity";
 import "../../styles/prose.css";
 
 const slug = decodeSlug(Astro.params.slug);
-
 if (!slug) {
 	return Astro.rewrite("/404");
 }
 
-const { entry: page, cacheHint } = await getEmDashEntry("pages", slug);
+const [{ entry: page, cacheHint }, companyMenuRes] = await Promise.all([
+	getEmDashEntry("pages", slug),
+	getMenuWithCacheHint("company"),
+]);
 
 if (!page) {
 	return Astro.rewrite("/404");
 }
 
-if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+if (Astro.cache?.enabled) {
+	Astro.cache.set(cacheHint);
+	Astro.cache.set(companyMenuRes.cacheHint);
+}
+
+const ogImg = getMediaUrl(page.data.featured_image, Astro.url.origin);
 const { siteTitle } = resolveBlogSiteIdentity(await getSiteSettings());
 const seo = getSeoMeta(page, {
 	siteTitle,
 	siteUrl: Astro.url.origin,
 	path: Astro.url.pathname.replace(/\/$/, ""),
+	defaultOgImage: ogImg,
 });
+
+const companyLinks =
+	companyMenuRes.data?.items && companyMenuRes.data.items.length > 0
+		? companyMenuRes.data.items
+		: [
+				{ label: "About Structure", url: "/pages/about" },
+				{ label: "Company History", url: "/pages/company-history" },
+				{ label: "Core Values & Safety", url: "/pages/core-values" },
+				{ label: "ISO & Certifications", url: "/pages/certifications" },
+				{ label: "Leadership Team", url: "/pages/our-team" },
+				{ label: "Service Pricing", url: "/pages/pricing" },
+				{ label: "F.A.Q", url: "/pages/faq" },
+			];
+
+const teamProfiles =
+	slug === "our-team"
+		? [
+				{
+					name: "Frankie Kao",
+					role: "Managing Director & Chief Engineer",
+					photo: "/images/structure/team-1.webp",
+				},
+				{
+					name: "Sarah Jenkins, PE",
+					role: "Head of Structural & MEP Engineering",
+					photo: "/images/structure/team-2.webp",
+				},
+				{
+					name: "Marcus Vance",
+					role: "Director of Field Operations",
+					photo: "/images/structure/team-3.webp",
+				},
+				{
+					name: "Elena Rostova",
+					role: "Senior Pre-Construction Estimator",
+					photo: "/images/structure/team-4.webp",
+				},
+			]
+		: [];
 ---
 
 <Base
 	title={seo.title}
 	pageTitle={seo.ogTitle}
 	description={seo.description}
+	image={seo.ogImage}
 	canonical={seo.canonical}
 	robots={seo.robots}
 	content={{ collection: "pages", id: page.data.id, slug }}
 >
-	<article class="band page">
-		<div class="frame page__layout">
-			<header class="page__header">
-				<h1 class="page__title" {...page.edit.title}>{page.data.title}</h1>
-			</header>
+	<PageBanner
+		title={String(page.data.title)}
+		subtitle={page.data.subtitle ? String(page.data.subtitle) : undefined}
+		backgroundImage="/images/structure/banner-about.jpg"
+		breadcrumbs={[{ label: String(page.data.title) }]}
+	/>
 
-			<div class="prose page__body" {...page.edit.content}>
-				<PortableText value={page.data.content} />
-			</div>
+	<section class="band section">
+		<div class="frame st-page-layout">
+			<aside class="st-page-sidebar" aria-label="Company section navigation">
+				<nav class="st-company-nav" aria-labelledby="company-nav-heading">
+					<h2 id="company-nav-heading">Company Profile</h2>
+					<ul>
+						{
+							companyLinks.map((item) => {
+								const isCurrent =
+									item.url.replace(/\/$/, "") === `/pages/${slug}`;
+								return (
+									<li>
+										<a
+											href={item.url}
+											aria-current={isCurrent ? "page" : undefined}
+										>
+											<span>{item.label}</span>
+											<span aria-hidden="true">›</span>
+										</a>
+									</li>
+								);
+							})
+						}
+					</ul>
+				</nav>
+
+				<div class="st-company-cta">
+					<p class="st-kicker st-kicker--on-dark">Ready To Mobilize?</p>
+					<h3>Speak With Our Engineers</h3>
+					<p>
+						Request an open-book GMP proposal or benchmark your budget online.
+					</p>
+					<a href="/contact#quote-form" class="st-btn st-btn--sm">
+						Get a Quote
+					</a>
+					<a href="/cost-calculator" class="st-btn st-btn--outline-light st-btn--sm">
+						Cost Calculator
+					</a>
+					<p class="st-company-cta__phone">{STRUCTURE_CONTACT.phone}</p>
+				</div>
+			</aside>
+
+			<article class="st-page-main">
+				{
+					page.data.featured_image && (
+						<div class="st-page-main__hero" {...page.edit.featured_image}>
+							<Image
+								image={page.data.featured_image}
+								sizes="(min-width: 1024px) 800px, 94vw"
+								priority
+							/>
+						</div>
+					)
+				}
+
+				<header class="st-page-main__header">
+					<p class="st-kicker">Structure Construction</p>
+					<h2 class="st-heading" {...page.edit.title}>{page.data.title}</h2>
+				</header>
+
+				{
+					teamProfiles.length > 0 && (
+						<div class="st-team-grid">
+							{teamProfiles.map((member) => (
+								<div class="st-team-card">
+									<img
+										src={member.photo}
+										alt={member.name}
+										width="370"
+										height="370"
+										loading="lazy"
+									/>
+									<div class="st-team-card__body">
+										<h3>{member.name}</h3>
+										<p>{member.role}</p>
+									</div>
+								</div>
+							))}
+						</div>
+					)
+				}
+
+				<div class="prose" {...page.edit.content}>
+					<PortableText value={page.data.content} />
+				</div>
+			</article>
 		</div>
-	</article>
+	</section>
 </Base>
 
 <style>
-	.page {
-		padding-block: clamp(3rem, 2rem + 4vw, 5.5rem) clamp(4rem, 3rem + 4vw, 7rem);
-	}
-
-	.page__layout {
+	.st-page-layout {
 		display: grid;
-		grid-template-columns: minmax(0, 1fr);
-		gap: var(--spacing-8);
+		grid-template-columns: minmax(250px, 290px) minmax(0, 1fr);
+		align-items: start;
+		gap: clamp(2rem, 1.5rem + 2.5vw, 3.5rem);
 	}
 
-	.page__title {
-		font-size: var(--font-size-display);
-		line-height: 1.05;
-		max-width: 22ch;
+	.st-page-sidebar {
+		position: sticky;
+		inset-block-start: calc(var(--nav-height) + var(--spacing-6));
+		display: grid;
+		gap: var(--spacing-6);
 	}
 
-	@media (min-width: 960px) {
-		.page__layout {
-			grid-template-columns: minmax(14rem, 1fr) minmax(0, var(--content-width));
-			column-gap: clamp(2rem, 1rem + 4vw, 6rem);
+	.st-company-nav {
+		background: var(--color-surface);
+		border: 1px solid var(--color-border-strong);
+		border-radius: var(--radius);
+		overflow: hidden;
+	}
+
+	.st-company-nav h2 {
+		padding: 1rem 1.25rem;
+		background: var(--st-navy);
+		color: #ffffff;
+		font-size: 0.9rem;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+	}
+
+	.st-company-nav ul {
+		list-style: none;
+	}
+
+	.st-company-nav li + li {
+		border-block-start: 1px solid var(--color-border-subtle);
+	}
+
+	.st-company-nav a {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 0.85rem 1.25rem;
+		border-inline-start: 4px solid transparent;
+		font-family: var(--font-heading);
+		font-size: 0.8rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		color: var(--color-text);
+		text-decoration: none;
+	}
+
+	.st-company-nav a:hover {
+		background: var(--color-fill);
+	}
+
+	.st-company-nav a[aria-current="page"] {
+		border-inline-start-color: var(--st-yellow);
+		background: var(--st-yellow-soft);
+		color: light-dark(#111111, #ffb600);
+	}
+
+	.st-company-cta {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+		padding: 1.5rem;
+		background: var(--st-navy);
+		color: #ffffff;
+		border-radius: var(--radius);
+	}
+
+	.st-company-cta h3 {
+		font-size: 1.05rem;
+		text-transform: uppercase;
+		color: #ffffff;
+	}
+
+	.st-company-cta p {
+		font-size: 0.875rem;
+		color: var(--st-navy-muted);
+	}
+
+	.st-company-cta__phone {
+		font-family: var(--font-mono);
+		color: var(--st-yellow) !important;
+		text-align: center;
+	}
+
+	.st-page-main__hero {
+		overflow: hidden;
+		border-radius: var(--radius);
+		border-block-end: 4px solid var(--st-yellow);
+		margin-block-end: var(--spacing-8);
+	}
+
+	.st-page-main__hero :global(img) {
+		inline-size: 100%;
+		max-inline-size: none;
+		aspect-ratio: 16 / 9;
+		object-fit: cover;
+	}
+
+	.st-page-main__header {
+		margin-block-end: var(--spacing-6);
+	}
+
+	.st-team-grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--spacing-6);
+		margin-block-end: var(--spacing-8);
+	}
+
+	.st-team-card {
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-block-end: 3px solid var(--st-yellow);
+		border-radius: var(--radius);
+		overflow: hidden;
+	}
+
+	.st-team-card img {
+		inline-size: 100%;
+		aspect-ratio: 4 / 3;
+		object-fit: cover;
+	}
+
+	.st-team-card__body {
+		padding: 1rem 1.2rem;
+	}
+
+	.st-team-card__body h3 {
+		font-size: 1rem;
+		text-transform: uppercase;
+	}
+
+	.st-team-card__body p {
+		margin-block-start: 0.2rem;
+		font-size: 0.85rem;
+		color: var(--color-muted);
+	}
+
+	@media (max-width: 900px) {
+		.st-page-layout {
+			grid-template-columns: minmax(0, 1fr);
 		}
 
-		.page__header {
-			position: sticky;
-			top: calc(var(--nav-height) + var(--spacing-8));
-			align-self: start;
+		.st-page-sidebar {
+			position: static;
+			order: 2;
+		}
+	}
+
+	@media (max-width: 560px) {
+		.st-team-grid {
+			grid-template-columns: minmax(0, 1fr);
 		}
 	}
 </style>

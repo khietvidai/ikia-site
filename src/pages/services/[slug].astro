@@ -1,0 +1,340 @@
+---
+import {
+	getEmDashEntry,
+	getEmDashCollection,
+	getSeoMeta,
+	decodeSlug,
+	getSiteSettings,
+} from "emdash";
+import { Image, PortableText } from "emdash/ui";
+import Base from "../../layouts/Base.astro";
+import PageBanner from "../../components/PageBanner.astro";
+import {
+	resolveBlogSiteIdentity,
+	getMediaUrl,
+	STRUCTURE_CONTACT,
+} from "../../utils/site-identity";
+import "../../styles/prose.css";
+
+const slug = decodeSlug(Astro.params.slug);
+if (!slug) {
+	return Astro.rewrite("/404");
+}
+
+const [{ entry: service, cacheHint }, allServicesRes] = await Promise.all([
+	getEmDashEntry("services", slug),
+	getEmDashCollection("services", { limit: 12 }),
+]);
+
+if (!service) {
+	return Astro.rewrite("/404");
+}
+
+if (Astro.cache?.enabled) {
+	Astro.cache.set(cacheHint);
+	Astro.cache.set(allServicesRes.cacheHint);
+}
+
+const ogImg = getMediaUrl(service.data.featured_image, Astro.url.origin);
+const { siteTitle } = resolveBlogSiteIdentity(await getSiteSettings());
+const seo = getSeoMeta(service, {
+	siteTitle,
+	siteUrl: Astro.url.origin,
+	path: Astro.url.pathname.replace(/\/$/, ""),
+	defaultOgImage: ogImg,
+});
+
+const allServices = allServicesRes.entries;
+---
+
+<Base
+	title={seo.title}
+	pageTitle={seo.ogTitle}
+	description={seo.description}
+	image={seo.ogImage}
+	canonical={seo.canonical}
+	robots={seo.robots}
+	content={{ collection: "services", id: service.data.id, slug }}
+>
+	<PageBanner
+		title={String(service.data.title)}
+		subtitle={service.data.excerpt ? String(service.data.excerpt) : undefined}
+		backgroundImage="/images/structure/banner-services.jpg"
+		breadcrumbs={[
+			{ label: "Our Services", href: "/services" },
+			{ label: String(service.data.title) },
+		]}
+	/>
+
+	<section class="band section">
+		<div class="frame st-service-layout">
+			<!-- Structure Classic Left Sidebar for Services -->
+			<aside class="st-service-sidebar" aria-label="Services navigation">
+				<nav class="st-side-menu" aria-labelledby="side-services-title">
+					<h2 id="side-services-title" class="st-side-menu__heading">
+						All Services
+					</h2>
+					<ul>
+						{
+							allServices.map((item) => (
+								<li>
+									<a
+										href={`/services/${item.id}`}
+										aria-current={item.id === service.id ? "page" : undefined}
+									>
+										<span>{item.data.title}</span>
+										<span aria-hidden="true">›</span>
+									</a>
+								</li>
+							))
+						}
+					</ul>
+				</nav>
+
+				<div class="st-service-specs">
+					<h2 class="st-service-specs__heading">Service Benchmarks</h2>
+					<dl>
+						{
+							service.data.delivery_time && (
+								<div>
+									<dt>Typical Timeline</dt>
+									<dd>{service.data.delivery_time}</dd>
+								</div>
+							)
+						}
+						{
+							service.data.warranty && (
+								<div>
+									<dt>Quality & Warranty</dt>
+									<dd>{service.data.warranty}</dd>
+								</div>
+							)
+						}
+						{
+							service.data.price_range && (
+								<div>
+									<dt>Indicative Rate</dt>
+									<dd>{service.data.price_range}</dd>
+								</div>
+							)
+						}
+					</dl>
+				</div>
+
+				<div class="st-brochure-box">
+					<h3>Pre-Construction Desk</h3>
+					<p>
+						Need a tailored scope or GMP estimate for{" "}
+						<strong>{service.data.title}</strong>?
+					</p>
+					<a
+						href={`/contact?estimate=${encodeURIComponent(String(service.data.title))}#quote-form`}
+						class="st-btn st-btn--sm"
+					>
+						Request Scope & Quote
+					</a>
+					<a href="/cost-calculator" class="st-btn st-btn--ghost st-btn--sm">
+						Open Cost Calculator
+					</a>
+					<p class="st-brochure-box__hotline">
+						Hotline: <a href={STRUCTURE_CONTACT.phoneHref}>{STRUCTURE_CONTACT.phone}</a>
+					</p>
+				</div>
+			</aside>
+
+			<article class="st-service-main">
+				{
+					service.data.featured_image && (
+						<div class="st-service-main__media" {...service.edit.featured_image}>
+							<Image
+								image={service.data.featured_image}
+								sizes="(min-width: 1024px) 800px, 94vw"
+								priority
+							/>
+						</div>
+					)
+				}
+
+				<div class="st-service-main__head">
+					<p class="st-kicker">Turnkey Service Specification</p>
+					<h2 class="st-heading" {...service.edit.title}>
+						{service.data.title}
+					</h2>
+				</div>
+
+				<div class="prose" {...service.edit.content}>
+					<PortableText value={service.data.content} />
+				</div>
+			</article>
+		</div>
+	</section>
+</Base>
+
+<style>
+	.st-service-layout {
+		display: grid;
+		grid-template-columns: minmax(260px, 310px) minmax(0, 1fr);
+		align-items: start;
+		gap: clamp(2rem, 1.5rem + 2.5vw, 3.5rem);
+	}
+
+	.st-service-sidebar {
+		position: sticky;
+		inset-block-start: calc(var(--nav-height) + var(--spacing-6));
+		display: grid;
+		gap: var(--spacing-6);
+	}
+
+	.st-side-menu {
+		background: var(--color-surface);
+		border: 1px solid var(--color-border-strong);
+		border-radius: var(--radius);
+		overflow: hidden;
+	}
+
+	.st-side-menu__heading {
+		padding: 1rem 1.25rem;
+		background: var(--st-navy);
+		color: #ffffff;
+		font-size: 0.9rem;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+	}
+
+	.st-side-menu ul {
+		list-style: none;
+	}
+
+	.st-side-menu li + li {
+		border-block-start: 1px solid var(--color-border-subtle);
+	}
+
+	.st-side-menu a {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.75rem;
+		padding: 0.9rem 1.25rem;
+		border-inline-start: 4px solid transparent;
+		font-family: var(--font-heading);
+		font-size: 0.8125rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		color: var(--color-text);
+		text-decoration: none;
+		transition:
+			background-color var(--transition-fast),
+			border-color var(--transition-fast);
+	}
+
+	.st-side-menu a:hover {
+		background: var(--color-fill);
+	}
+
+	.st-side-menu a[aria-current="page"] {
+		border-inline-start-color: var(--st-yellow);
+		background: var(--st-yellow-soft);
+		color: light-dark(#111111, #ffb600);
+	}
+
+	.st-service-specs {
+		padding: 1.5rem;
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-block-start: 3px solid var(--st-yellow);
+		border-radius: var(--radius);
+	}
+
+	.st-service-specs__heading {
+		font-size: 0.9rem;
+		text-transform: uppercase;
+		margin-block-end: 1rem;
+	}
+
+	.st-service-specs dl {
+		display: grid;
+		gap: 0.8rem;
+	}
+
+	.st-service-specs dt {
+		font-family: var(--font-heading);
+		font-size: 0.7rem;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--color-muted);
+	}
+
+	.st-service-specs dd {
+		margin-block-start: 0.2rem;
+		font-weight: 700;
+		color: var(--color-text);
+	}
+
+	.st-brochure-box {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+		padding: 1.5rem;
+		background: var(--st-navy);
+		color: #ffffff;
+		border-radius: var(--radius);
+	}
+
+	.st-brochure-box h3 {
+		font-size: 1rem;
+		text-transform: uppercase;
+		color: #ffffff;
+	}
+
+	.st-brochure-box p {
+		font-size: 0.875rem;
+		line-height: 1.55;
+		color: var(--st-navy-muted);
+	}
+
+	.st-brochure-box strong {
+		color: #ffffff;
+	}
+
+	.st-brochure-box__hotline {
+		margin-block-start: 0.25rem;
+		font-family: var(--font-mono);
+		font-size: 0.8rem !important;
+	}
+
+	.st-brochure-box__hotline a {
+		color: var(--st-yellow);
+		text-decoration: none;
+	}
+
+	.st-service-main__media {
+		overflow: hidden;
+		border-radius: var(--radius);
+		border-block-end: 4px solid var(--st-yellow);
+		margin-block-end: var(--spacing-8);
+		background: var(--st-navy);
+	}
+
+	.st-service-main__media :global(img) {
+		inline-size: 100%;
+		max-inline-size: none;
+		aspect-ratio: 16 / 9;
+		object-fit: cover;
+	}
+
+	.st-service-main__head {
+		margin-block-end: var(--spacing-5);
+	}
+
+	@media (max-width: 920px) {
+		.st-service-layout {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.st-service-sidebar {
+			position: static;
+			order: 2;
+		}
+	}
+</style>
